@@ -1,63 +1,86 @@
-body {
-  margin: 0;
-  padding: 0;
+:root{
+--bg:#0a0a0a; --fg:#f6f6f6; --pink:#ff2aa1; --pink2:#ff7ac6; --card:#121212; --ok:#3ad29f; --bad:#ff4d6d;
+}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(1200px 800px at 70% -10%, #1b0012, var(--bg));color:var(--fg);font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif}
+.grid{display:grid;grid-template-rows:auto 1fr auto;min-height:100dvh}
+header{padding:20px;text-align:center;font-size:clamp(22px,3vw,36px);}
+.glow{color:var(--fg);text-shadow:0 0 12px var(--pink),0 0 24px var(--pink2)}
+.glow-sm{color:var(--fg);text-shadow:0 0 6px var(--pink2)}
+main{display:grid;gap:16px;padding:20px;grid-template-columns:1fr 1fr}
+.panel{background:linear-gradient(145deg,#0f0f0f,#070707);border:1px solid #222;border-radius:18px;padding:18px;box-shadow:0 0 20px rgba(255,42,161,.14)}
+.wheel-wrap{display:grid;justify-items:center;gap:10px}
+.btn{background:linear-gradient(90deg,var(--pink),var(--pink2));border:none;color:#fff;padding:12px 18px;border-radius:12px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(255,42,161,.35)}
+.btn:hover{transform:translateY(-1px)}
+.badge{display:inline-block;background:rgba(255,42,161,.15);border:1px solid rgba(255,42,161,.5);padding:6px 10px;border-radius:999px;margin-bottom:10px}
+.qtext{font-size:20px;margin:10px 0 8px}
+.options{display:grid;gap:10px}
+.options button{background:#121212;border:1px solid #2a2a2a;padding:10px;border-radius:12px;color:var(--fg);cursor:pointer}
+.options button:hover{border-color:var(--pink);box-shadow:0 0 10px rgba(255,42,161,.3)}
+.toast{margin-top:10px;min-height:24px}
+.toast.ok{color:var(--ok)}
+.toast.bad{color:var(--bad)}
+.podium{counter-reset:pos;list-style:none;padding:0;margin:0}
+.podium li{padding:8px 10px;margin:6px 0;background:#0d0d0d;border:1px solid #222;border-radius:12px;display:flex;justify-content:space-between}
+footer{opacity:.7;text-align:center;padding:16px}
+@media (max-width:900px){main{grid-template-columns:1fr}}
+
+/* === ESTILO GLOBAL CYBER PINK === */
+body.menu-body {
+  background: linear-gradient(135deg, #ffb6c1, #ffe6f0, #ff9ad5);
   font-family: 'Orbitron', sans-serif;
-  background-color: #1a1a1a;
   color: #fff;
-  overflow: hidden;
-  background-image: radial-gradient(rgba(255, 105, 180, 0.15) 1px, transparent 1px),
-                    url('https://i.imgur.com/B5jU2lO.png'); /* textura sutil con signos ? */
-  background-size: 50px 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
 }
 
 .menu-container {
   text-align: center;
-  margin-top: 10vh;
+  background: rgba(20, 20, 20, 0.9);
+  padding: 3rem 4rem;
+  border-radius: 20px;
+  box-shadow: 0 0 30px rgba(255, 105, 180, 0.5);
 }
 
-.title-glitch {
-  font-size: 3em;
-  color: #ff80c8;
-  text-shadow: 0 0 10px #ff80c8, 0 0 20px #ff40a0;
-  animation: flicker 2s infinite alternate;
+.title {
+  font-size: 3rem;
+  color: #ff77d9;
+  text-shadow: 0 0 15px #ffb6c1, 0 0 30px #ff77d9;
+  margin-bottom: 1.5rem;
 }
 
-.subtitle {
-  color: #ffcfe8;
-  margin-bottom: 30px;
-  font-style: italic;
-}
-
-.menu-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  align-items: center;
+.menu-card h2 {
+  color: #fff;
+  margin-bottom: 2rem;
+  font-weight: normal;
+  text-shadow: 0 0 10px #ffb6c1;
 }
 
 .btn {
-  width: 250px;
-  padding: 12px;
-  font-size: 1.2em;
+  display: block;
+  margin: 0.8rem auto;
+  padding: 0.8rem 1.5rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #fff;
+  background: linear-gradient(90deg, #ff0080, #ff66cc);
   border: none;
   border-radius: 12px;
-  color: white;
-  background: linear-gradient(90deg, #ff1cae, #ff79e0);
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.3s;
+  box-shadow: 0 0 15px rgba(255, 0, 128, 0.4);
+  transition: all 0.2s ease;
 }
 
 .btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 20px #ff99dd;
+  transform: scale(1.08);
+  box-shadow: 0 0 25px rgba(255, 0, 128, 0.8);
 }
 
-.exit {
-  background: #333;
-  border: 2px solid #ff69b4;
-}
-
-@keyframes flicker {
-  0% { text-shadow: 0 0 5px #ff80c8; }
-  100% { text-shadow: 0 0 25px #ff40a0, 0 0 40px #ff99e6; }
+.exit-btn {
+  background: #222;
+  border: 1px solid #ffb6c1;
+  color: #ffb6c1;
 }
