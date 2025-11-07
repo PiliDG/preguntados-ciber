@@ -1,0 +1,62 @@
+import json
+import os
+import re
+from typing import Dict, List
+from collections import defaultdict
+from .models import Question, Category
+
+DATA_PATH = os.environ.get("DATA_PATH", os.path.join(os.path.dirname(__file__), "..", "data", "questions.json"))
+DB_PATH = os.environ.get("DB_PATH", os.path.join(os.path.dirname(__file__), "..", "data", "db.json"))
+
+# DB JSON ligera para CRUD (preguntas normalizadas)
+# Estructura: {"questions": {id: Question}, "categories": {name: Category}}
+
+def ensure_db():
+    if not os.path.exists(DB_PATH):
+        # inicializa a partir de questions.json
+        with open(DATA_PATH, "r", encoding="utf-8") as f:
+            raw = json.load(f)
+        questions: Dict[str, Question] = {}
+        categories: Dict[str, Category] = {}
+        i = 1
+        for cat, items in raw.items():
+            cat_obj = Category(name=cat)
+            for it in items:
+                qid = f"Q{i:04d}"
+                q = Question(
+                    id=qid,
+                    category=cat,
+                    text=it["texto"],
+                    options=it["opciones"],
+                    answer_index=int(it["respuesta"]),
+                )
+                questions[qid] = q.to_dict()
+                cat_obj.question_ids.append(qid)
+                i += 1
+            categories[cat] = cat_obj.to_dict()
+        with open(DB_PATH, "w", encoding="utf-8") as f:
+            json.dump({"questions": questions, "categories": categories}, f, ensure_ascii=False, indent=2)
+
+
+def read_db() -> Dict:
+    ensure_db()
+    with open(DB_PATH, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def write_db(db: Dict) -> None:
+    with open(DB_PATH, "w", encoding="utf-8") as f:
+        json.dump(db, f, ensure_ascii=False, indent=2)
+
+
+def search_questions(text: str) -> List[Question]:
+    """Búsqueda simple por regex en el enunciado."""
+    pat = re.compile(text, re.IGNORECASE)
+    db = read_db()
+    out = []
+    for qid, q in db["questions"].items():
+        if pat.search(q["text"]):
+            out.append(Question(id=qid, category=q["category"], text=q["text"], options=q["options"], answer_index=q["answer_index"]))
+    return out
+
+

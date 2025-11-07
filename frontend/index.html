@@ -1,0 +1,38 @@
+html
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Preguntados Ciber</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div class="grid">
+      <header class="glow">⚡ Preguntados Ciber</header>
+      <main>
+        <section class="panel">
+          <div class="wheel-wrap">
+            <canvas id="wheel" width="360" height="360"></canvas>
+            <button id="spinBtn" class="btn">Girar ruleta</button>
+          </div>
+          <div class="question-wrap">
+            <div id="category" class="badge"></div>
+            <div id="qtext" class="qtext"></div>
+            <div id="options" class="options"></div>
+          </div>
+        </section>
+
+        <section class="panel stats">
+          <h2 class="glow-sm">🏆 Podio</h2>
+          <ol id="podium" class="podium"></ol>
+          <div id="toast" class="toast"></div>
+        </section>
+      </main>
+      <footer>Hecho con ❤ — estética <b>cyber</b> rosa/blanco/negro</footer>
+    </div>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
+

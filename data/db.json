@@ -1,0 +1,681 @@
+{
+  "questions": {
+    "Q0001": {
+      "id": "Q0001",
+      "category": "Colecciones y datos",
+      "text": "¿Cuál de estas estructuras es inmutable en Python?",
+      "options": [
+        "Lista",
+        "Tupla",
+        "Diccionario",
+        "Conjunto"
+      ],
+      "answer_index": 1
+    },
+    "Q0002": {
+      "id": "Q0002",
+      "category": "Colecciones y datos",
+      "text": "¿Qué hace list.append(x)?",
+      "options": [
+        "Agrega x al final",
+        "Inserta x al inicio",
+        "Devuelve una nueva lista",
+        "Ordena la lista"
+      ],
+      "answer_index": 0
+    },
+    "Q0003": {
+      "id": "Q0003",
+      "category": "Colecciones y datos",
+      "text": "¿Qué devuelve dict.keys()?",
+      "options": [
+        "Lista de claves",
+        "Vista de claves",
+        "Tupla de claves",
+        "Iterador consumible"
+      ],
+      "answer_index": 1
+    },
+    "Q0004": {
+      "id": "Q0004",
+      "category": "Colecciones y datos",
+      "text": "¿Qué hace set.add(x)?",
+      "options": [
+        "Agrega x si no existe",
+        "Agrega duplicados",
+        "Elimina x",
+        "Ordena el set"
+      ],
+      "answer_index": 0
+    },
+    "Q0005": {
+      "id": "Q0005",
+      "category": "Colecciones y datos",
+      "text": "¿Qué hace list.sort() por defecto?",
+      "options": [
+        "Ordena y devuelve nueva lista",
+        "Ordena in-place y devuelve None",
+        "Ordena desc.",
+        "No se puede"
+      ],
+      "answer_index": 1
+    },
+    "Q0006": {
+      "id": "Q0006",
+      "category": "Colecciones y datos",
+      "text": "¿Cuál es la copia superficial correcta?",
+      "options": [
+        "a=b",
+        "a=list.copy(b)",
+        "a=b.copy()",
+        "copy(a)=b"
+      ],
+      "answer_index": 2
+    },
+    "Q0007": {
+      "id": "Q0007",
+      "category": "Colecciones y datos",
+      "text": "¿Qué hace slicing [::-1]?",
+      "options": [
+        "Toma pares",
+        "Toma impares",
+        "Revierte",
+        "Nada"
+      ],
+      "answer_index": 2
+    },
+    "Q0008": {
+      "id": "Q0008",
+      "category": "Colecciones y datos",
+      "text": "Para eliminar por valor el primero que aparece:",
+      "options": [
+        "pop()",
+        "remove(x)",
+        "discard(x)",
+        "del lista[x]"
+      ],
+      "answer_index": 1
+    },
+    "Q0009": {
+      "id": "Q0009",
+      "category": "Colecciones y datos",
+      "text": "¿Qué estructura mantiene orden de inserción (3.7+)?",
+      "options": [
+        "set",
+        "dict",
+        "tuple",
+        "frozenset"
+      ],
+      "answer_index": 1
+    },
+    "Q0010": {
+      "id": "Q0010",
+      "category": "Colecciones y datos",
+      "text": "¿Cuál estructura permite claves no hashables?",
+      "options": [
+        "dict",
+        "defaultdict",
+        "ninguna",
+        "Counter"
+      ],
+      "answer_index": 2
+    },
+    "Q0011": {
+      "id": "Q0011",
+      "category": "Lambda y funciones",
+      "text": "Una lambda en Python es…",
+      "options": [
+        "Función nombrada",
+        "Función anónima",
+        "Clase",
+        "Módulo"
+      ],
+      "answer_index": 1
+    },
+    "Q0012": {
+      "id": "Q0012",
+      "category": "Lambda y funciones",
+      "text": "map(f, iterable) retorna…",
+      "options": [
+        "Lista",
+        "Iterador",
+        "Tupla",
+        "Set"
+      ],
+      "answer_index": 1
+    },
+    "Q0013": {
+      "id": "Q0013",
+      "category": "Lambda y funciones",
+      "text": "filter(f, iterable) mantiene…",
+      "options": [
+        "Siempre todo",
+        "Elementos donde f es True",
+        "Elementos None",
+        "Elementos falsy"
+      ],
+      "answer_index": 1
+    },
+    "Q0014": {
+      "id": "Q0014",
+      "category": "Lambda y funciones",
+      "text": "reduce(f, seq) vive en…",
+      "options": [
+        "functools",
+        "itertools",
+        "collections",
+        "re"
+      ],
+      "answer_index": 0
+    },
+    "Q0015": {
+      "id": "Q0015",
+      "category": "Lambda y funciones",
+      "text": "Sintaxis lambda correcta:",
+      "options": [
+        "lambda x: x+1",
+        "lambda: x -> 1",
+        "lambda(x){x+1}",
+        "fn(x)=x+1"
+      ],
+      "answer_index": 0
+    },
+    "Q0016": {
+      "id": "Q0016",
+      "category": "Lambda y funciones",
+      "text": "sorted(seq, key=…)",
+      "options": [
+        "key recibe cada elemento",
+        "key recibe la lista",
+        "key ordena in-place",
+        "key es obligatorio"
+      ],
+      "answer_index": 0
+    },
+    "Q0017": {
+      "id": "Q0017",
+      "category": "Lambda y funciones",
+      "text": "¿Qué hace any(iterable)?",
+      "options": [
+        "True si todos True",
+        "True si alguno True",
+        "Cuenta True",
+        "Invierte booleanos"
+      ],
+      "answer_index": 1
+    },
+    "Q0018": {
+      "id": "Q0018",
+      "category": "Lambda y funciones",
+      "text": "¿Qué retorna zip(a,b)?",
+      "options": [
+        "Lista de tuplas",
+        "Iterador de tuplas",
+        "Set",
+        "Dict"
+      ],
+      "answer_index": 1
+    },
+    "Q0019": {
+      "id": "Q0019",
+      "category": "Lambda y funciones",
+      "text": "list(map(int, ['1','2'])) ->",
+      "options": [
+        "Error",
+        "[1,2]",
+        "['1','2']",
+        "(1,2)"
+      ],
+      "answer_index": 1
+    },
+    "Q0020": {
+      "id": "Q0020",
+      "category": "Lambda y funciones",
+      "text": "Lambda típica para pares:",
+      "options": [
+        "lambda x: x%2",
+        "lambda x: x%2==0",
+        "lambda: x%2==0",
+        "lambda x: return x%2==0"
+      ],
+      "answer_index": 1
+    },
+    "Q0021": {
+      "id": "Q0021",
+      "category": "Archivos y Excepciones",
+      "text": "Modo 'w' en open()…",
+      "options": [
+        "Sólo lectura",
+        "Escritura (sobrescribe)",
+        "Append",
+        "Binario"
+      ],
+      "answer_index": 1
+    },
+    "Q0022": {
+      "id": "Q0022",
+      "category": "Archivos y Excepciones",
+      "text": "Bloque para manejar errores:",
+      "options": [
+        "if/else",
+        "try/except",
+        "with/as",
+        "switch"
+      ],
+      "answer_index": 1
+    },
+    "Q0023": {
+      "id": "Q0023",
+      "category": "Archivos y Excepciones",
+      "text": "with open(...) garantiza…",
+      "options": [
+        "Autocierre",
+        "Flush manual",
+        "Bloqueo de hilo",
+        "Permisos root"
+      ],
+      "answer_index": 0
+    },
+    "Q0024": {
+      "id": "Q0024",
+      "category": "Archivos y Excepciones",
+      "text": "Capturar error específico:",
+      "options": [
+        "except:",
+        "except Exception:",
+        "except ValueError:",
+        "except BaseException:"
+      ],
+      "answer_index": 2
+    },
+    "Q0025": {
+      "id": "Q0025",
+      "category": "Archivos y Excepciones",
+      "text": "Leer todas las líneas:",
+      "options": [
+        "f.read()",
+        "f.readlines()",
+        "f.readline()",
+        "next(f)"
+      ],
+      "answer_index": 1
+    },
+    "Q0026": {
+      "id": "Q0026",
+      "category": "Archivos y Excepciones",
+      "text": "Escribir una línea:",
+      "options": [
+        "f.put()",
+        "f.push()",
+        "f.write()",
+        "f.append()"
+      ],
+      "answer_index": 2
+    },
+    "Q0027": {
+      "id": "Q0027",
+      "category": "Archivos y Excepciones",
+      "text": "Cerrar archivo manual:",
+      "options": [
+        "f.end()",
+        "f.close()",
+        "f.stop()",
+        "No se puede"
+      ],
+      "answer_index": 1
+    },
+    "Q0028": {
+      "id": "Q0028",
+      "category": "Archivos y Excepciones",
+      "text": "Crear archivo si no existe:",
+      "options": [
+        "'x'",
+        "'c'",
+        "'n'",
+        "'nx'"
+      ],
+      "answer_index": 0
+    },
+    "Q0029": {
+      "id": "Q0029",
+      "category": "Archivos y Excepciones",
+      "text": "Traducción de EAFP:",
+      "options": [
+        "Es más fácil pedir perdón",
+        "Evitar errores siempre",
+        "Errores afuera, funciones dentro",
+        "No significa nada"
+      ],
+      "answer_index": 0
+    },
+    "Q0030": {
+      "id": "Q0030",
+      "category": "Archivos y Excepciones",
+      "text": "finally se ejecuta…",
+      "options": [
+        "Sólo si no hay error",
+        "Siempre",
+        "Nunca",
+        "Sólo con return"
+      ],
+      "answer_index": 1
+    },
+    "Q0031": {
+      "id": "Q0031",
+      "category": "JSON y APIs",
+      "text": "json.loads(s) hace…",
+      "options": [
+        "Python->JSON",
+        "JSON->Python",
+        "Escribe archivo",
+        "Valida esquema"
+      ],
+      "answer_index": 1
+    },
+    "Q0032": {
+      "id": "Q0032",
+      "category": "JSON y APIs",
+      "text": "json.dumps(obj) hace…",
+      "options": [
+        "Python->JSON str",
+        "JSON->obj",
+        "Lee archivo",
+        "None"
+      ],
+      "answer_index": 0
+    },
+    "Q0033": {
+      "id": "Q0033",
+      "category": "JSON y APIs",
+      "text": "Para leer JSON de disco:",
+      "options": [
+        "json.load(f)",
+        "json.loads(f)",
+        "json.read(f)",
+        "f.json()"
+      ],
+      "answer_index": 0
+    },
+    "Q0034": {
+      "id": "Q0034",
+      "category": "JSON y APIs",
+      "text": "Campo faltante en JSON:",
+      "options": [
+        "KeyError",
+        "IndexError",
+        "TypeError",
+        "SyntaxError"
+      ],
+      "answer_index": 0
+    },
+    "Q0035": {
+      "id": "Q0035",
+      "category": "JSON y APIs",
+      "text": "API REST suele usar…",
+      "options": [
+        "FTP",
+        "HTTP",
+        "SMTP",
+        "SSH"
+      ],
+      "answer_index": 1
+    },
+    "Q0036": {
+      "id": "Q0036",
+      "category": "JSON y APIs",
+      "text": "Código HTTP éxito:",
+      "options": [
+        "1xx",
+        "2xx",
+        "3xx",
+        "4xx"
+      ],
+      "answer_index": 1
+    },
+    "Q0037": {
+      "id": "Q0037",
+      "category": "JSON y APIs",
+      "text": "json.dumps(..., indent=2)",
+      "options": [
+        "Compacta",
+        "Formatea con sangría",
+        "Minifica",
+        "Valida"
+      ],
+      "answer_index": 1
+    },
+    "Q0038": {
+      "id": "Q0038",
+      "category": "JSON y APIs",
+      "text": "Cabecera típica JSON:",
+      "options": [
+        "Accept: text/html",
+        "Content-Type: application/json",
+        "Host: json",
+        "Server: json"
+      ],
+      "answer_index": 1
+    },
+    "Q0039": {
+      "id": "Q0039",
+      "category": "JSON y APIs",
+      "text": "API key va…",
+      "options": [
+        "Siempre en URL",
+        "En headers/vars seguras",
+        "En comentarios",
+        "No importa"
+      ],
+      "answer_index": 1
+    },
+    "Q0040": {
+      "id": "Q0040",
+      "category": "JSON y APIs",
+      "text": "HTTP 404 es…",
+      "options": [
+        "OK",
+        "No encontrado",
+        "Prohibido",
+        "Error servidor"
+      ],
+      "answer_index": 1
+    },
+    "Q0041": {
+      "id": "Q0041",
+      "category": "Recursividad y Algoritmos",
+      "text": "Condición clave en recursión:",
+      "options": [
+        "Caso base",
+        "Globales",
+        "break",
+        "pass"
+      ],
+      "answer_index": 0
+    },
+    "Q0042": {
+      "id": "Q0042",
+      "category": "Recursividad y Algoritmos",
+      "text": "Complejidad de búsqueda binaria:",
+      "options": [
+        "O(n)",
+        "O(log n)",
+        "O(n log n)",
+        "O(1)"
+      ],
+      "answer_index": 1
+    },
+    "Q0043": {
+      "id": "Q0043",
+      "category": "Recursividad y Algoritmos",
+      "text": "Quicksort promedio:",
+      "options": [
+        "O(n)",
+        "O(log n)",
+        "O(n log n)",
+        "O(n^2)"
+      ],
+      "answer_index": 2
+    },
+    "Q0044": {
+      "id": "Q0044",
+      "category": "Recursividad y Algoritmos",
+      "text": "Fibonacci recursivo simple:",
+      "options": [
+        "Eficiente",
+        "Muy eficiente",
+        "Ineficiente",
+        "Óptimo"
+      ],
+      "answer_index": 2
+    },
+    "Q0045": {
+      "id": "Q0045",
+      "category": "Recursividad y Algoritmos",
+      "text": "Pila de llamadas…",
+      "options": [
+        "Estructura FIFO",
+        "Estructura LIFO",
+        "Heap",
+        "Disco"
+      ],
+      "answer_index": 1
+    },
+    "Q0046": {
+      "id": "Q0046",
+      "category": "Recursividad y Algoritmos",
+      "text": "DFS usa…",
+      "options": [
+        "Cola",
+        "Pila",
+        "Árbol binario",
+        "Heap"
+      ],
+      "answer_index": 1
+    },
+    "Q0047": {
+      "id": "Q0047",
+      "category": "Recursividad y Algoritmos",
+      "text": "MergeSort es…",
+      "options": [
+        "In place",
+        "No in place",
+        "Ambas",
+        "Ninguna"
+      ],
+      "answer_index": 1
+    },
+    "Q0048": {
+      "id": "Q0048",
+      "category": "Recursividad y Algoritmos",
+      "text": "Recursión sin caso base:",
+      "options": [
+        "Termina igual",
+        "StackOverflow",
+        "Se optimiza",
+        "No compila"
+      ],
+      "answer_index": 1
+    },
+    "Q0049": {
+      "id": "Q0049",
+      "category": "Recursividad y Algoritmos",
+      "text": "Big-O mira…",
+      "options": [
+        "Mejor caso",
+        "Caso promedio",
+        "Peor caso (común)",
+        "Nada"
+      ],
+      "answer_index": 2
+    },
+    "Q0050": {
+      "id": "Q0050",
+      "category": "Recursividad y Algoritmos",
+      "text": "Tail recursion en Python…",
+      "options": [
+        "Optimizada",
+        "Parcialmente",
+        "No optimizada",
+        "Prohibida"
+      ],
+      "answer_index": 2
+    }
+  },
+  "categories": {
+    "Colecciones y datos": {
+      "name": "Colecciones y datos",
+      "question_ids": [
+        "Q0001",
+        "Q0002",
+        "Q0003",
+        "Q0004",
+        "Q0005",
+        "Q0006",
+        "Q0007",
+        "Q0008",
+        "Q0009",
+        "Q0010"
+      ]
+    },
+    "Lambda y funciones": {
+      "name": "Lambda y funciones",
+      "question_ids": [
+        "Q0011",
+        "Q0012",
+        "Q0013",
+        "Q0014",
+        "Q0015",
+        "Q0016",
+        "Q0017",
+        "Q0018",
+        "Q0019",
+        "Q0020"
+      ]
+    },
+    "Archivos y Excepciones": {
+      "name": "Archivos y Excepciones",
+      "question_ids": [
+        "Q0021",
+        "Q0022",
+        "Q0023",
+        "Q0024",
+        "Q0025",
+        "Q0026",
+        "Q0027",
+        "Q0028",
+        "Q0029",
+        "Q0030"
+      ]
+    },
+    "JSON y APIs": {
+      "name": "JSON y APIs",
+      "question_ids": [
+        "Q0031",
+        "Q0032",
+        "Q0033",
+        "Q0034",
+        "Q0035",
+        "Q0036",
+        "Q0037",
+        "Q0038",
+        "Q0039",
+        "Q0040"
+      ]
+    },
+    "Recursividad y Algoritmos": {
+      "name": "Recursividad y Algoritmos",
+      "question_ids": [
+        "Q0041",
+        "Q0042",
+        "Q0043",
+        "Q0044",
+        "Q0045",
+        "Q0046",
+        "Q0047",
+        "Q0048",
+        "Q0049",
+        "Q0050"
+      ]
+    }
+  }
+}
