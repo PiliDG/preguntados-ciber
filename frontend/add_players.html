@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Debuggeadas — Agregar jugadores</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div class="menu-container" style="max-width:640px; width:90%">
+      <h1 class="glow-title">Agregar jugadores</h1>
+      <p class="muted" style="margin-top:-10px; opacity:.85">Máximo 20 jugadores</p>
+
+      <form id="addForm" autocomplete="off" style="margin-top:10px">
+        <input
+          id="playerInput"
+          type="text"
+          placeholder="Nombre del jugador"
+          maxlength="50"
+          aria-label="Nombre del jugador"
+          style="width:100%; background:rgba(0,0,0,.25); color:#fff; border:1px solid rgba(255,255,255,.25); border-radius:12px; padding:12px 14px; font-size:1rem; box-sizing:border-box;"
+        />
+        <button type="submit" class="btn-menu" style="margin-top:12px">Agregar</button>
+      </form>
+
+      <ul id="playersList" class="list" aria-live="polite" style="margin-top:14px"></ul>
+
+      <a href="/static/menu.html" class="btn-menu exit" style="margin-top:20px; display:block; text-align:center">Volver al menú</a>
+    </div>
+
+    <script>
+      (function(){
+        const MAX = 20;
+        const players = [];
+        const input = document.getElementById('playerInput');
+        const list = document.getElementById('playersList');
+        const form = document.getElementById('addForm');
+
+        function render(){
+          list.innerHTML = '';
+          players.forEach(name => {
+            const li = document.createElement('li');
+            li.textContent = name;
+            list.appendChild(li);
+          });
+        }
+
+        function add(name){
+          const n = (name || '').trim();
+          if(!n){
+            alert('Ingresá un nombre válido.');
+            return;
+          }
+          if(players.length >= MAX){
+            alert('Máximo 20 jugadores.');
+            return;
+          }
+          players.push(n);
+          input.value = '';
+          input.focus();
+          render();
+        }
+
+        form.addEventListener('submit', (ev) => {
+          ev.preventDefault();
+          add(input.value);
+        });
+
+        input.addEventListener('keydown', (ev) => {
+          if(ev.key === 'Enter'){
+            ev.preventDefault();
+            add(input.value);
+          }
+        });
+
+        render();
+      })();
+    </script>
+  </body>
+  </html>
+
