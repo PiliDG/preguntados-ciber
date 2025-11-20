@@ -150,3 +150,114 @@ textarea{width:100%; background:rgba(0,0,0,.25); color:#fff; border:1px solid rg
 .list button{border:none;border-radius:8px;background:#241f25;color:#fff;padding:6px 10px;cursor:pointer}
 .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(10px);opacity:0;pointer-events:none;background:#16141a;border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:10px 14px;transition:.25s}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* --- Layout pantalla de juego --- */
+.game-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr 0.9fr;
+  gap: 24px;
+  margin-top: 16px;
+}
+
+@media (max-width: 1000px) {
+  .game-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.wheel-panel, .question-panel, .podium-panel {
+  min-height: 260px;
+}
+
+/* Timer */
+.timer {
+  position: relative;
+  margin: 10px 0 16px;
+  height: 22px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+#timer-bar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #ff2aa1, #ff9ad6);
+  transition: width 0.3s ease-out;
+}
+
+#timer-text {
+  position: relative;
+  z-index: 1;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  line-height: 22px;
+}
+
+/* Texto pregunta / opciones */
+.qtext {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.option-btn {
+  border: none;
+  border-radius: 14px;
+  padding: 10px 14px;
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.08s ease, background 0.1s ease, box-shadow 0.1s ease;
+}
+
+.option-btn:hover {
+  transform: translateY(-1px);
+  background: rgba(0, 0, 0, 0.55);
+  box-shadow: 0 0 12px rgba(255, 42, 161, 0.35);
+}
+
+.option-btn.disabled {
+  opacity: 0.6;
+  cursor: default;
+  box-shadow: none;
+}
+
+.option-btn.correct {
+  background: rgba(0, 200, 120, 0.5);
+}
+
+.option-btn.wrong {
+  background: rgba(255, 80, 80, 0.5);
+}
+
+/* Toast */
+.toast {
+  margin-top: 12px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  min-height: 22px;
+}
+
+.toast.ok {
+  background: rgba(0, 200, 120, 0.15);
+  border: 1px solid rgba(0, 200, 120, 0.6);
+}
+
+.toast.bad {
+  background: rgba(255, 80, 80, 0.15);
+  border: 1px solid rgba(255, 80, 80, 0.7);
+}
