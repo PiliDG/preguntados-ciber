@@ -153,6 +153,19 @@ textarea{width:100%; background:rgba(0,0,0,.25); color:#fff; border:1px solid rg
 .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(10px);opacity:0;pointer-events:none;background:#16141a;border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:10px 14px;transition:.25s}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
+/* Botón volver centrado y ancho consistente */
+.btn-volver{
+  display:block;
+  width:100%;
+  max-width:500px;
+  margin:1.5rem auto 0;
+  text-align:center;
+}
+
+/* Fondo uniforme al hacer scroll */
+html, body{min-height:100vh}
+body{height:auto; background-attachment: fixed, fixed}
+
 /* Tarjetas de jugadores */
 .player-item {
   background: rgba(255, 255, 255, .08);
