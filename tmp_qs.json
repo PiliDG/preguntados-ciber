@@ -60,3 +60,5 @@
     {"texto": "Tail recursion en Python…", "opciones": ["Optimizada", "Parcialmente", "No optimizada", "Prohibida"], "respuesta": 2}
   ]
 }
+
+
