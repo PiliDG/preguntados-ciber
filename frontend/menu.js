@@ -1,29 +1,37 @@
-function goTo(section) {
-  // navegación simple; reemplaza los alerts
-  if (typeof section === 'string') {
-    window.location.href = section;
-  }
-}
+"use strict";
 
-function startGame() {
-  // validación: debe haber jugadores
-  fetch("/api/players")
-    .then(res => res.json())
-    .then(players => {
-      if (Array.isArray(players) && players.length === 0) {
-        alert("Debes agregar al menos un jugador para iniciar.");
-      } else {
-        window.location.href = "/static/game.html"; // el juego real
-      }
-    })
-    .catch(() => {
-      alert("Error al iniciar el juego.");
+// Enlaza los botones del menú a sus pantallas
+// Sin alerts: solo cambia window.location.href a "archivo.html"
+
+document.addEventListener("DOMContentLoaded", () => {
+  const routes = {
+    // menú principal clásico
+    "#addPlayers": "add_players.html",
+    "#startGame": "game.html",
+    "#viewPodium": "podium.html",
+    "#instructions": "instructions.html",
+    "#crud": "admin_questions.html",
+    "#editPlayers": "edit_players.html",
+    
+    // variantes de ids usados en el layout alternativo
+    "#btnStart": "game.html",
+    "#btnPodium": "podium.html",
+    "#btnHelp": "instructions.html",
+    "#btnCrud": "admin_questions.html",
+    "#btnExit": "index.html",
+
+    // botón de salida con clase genérica
+    ".exit": "index.html",
+  };
+
+  for (const [selector, file] of Object.entries(routes)) {
+    const nodes = document.querySelectorAll(selector);
+    nodes.forEach((el) => {
+      el.addEventListener("click", (ev) => {
+        ev.preventDefault();
+        window.location.href = file;
+      });
     });
-}
-
-function exitGame() {
-  if (confirm("¿Seguro que querés salir de Debuggeadas?")) {
-    window.close();
   }
-}
+});
 
