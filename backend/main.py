@@ -1,12 +1,13 @@
 import os
 import logging
+from typing import List
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 import requests
 
-from .models import AnswerIn, QuestionIn, Player, Question
+from .models import AnswerIn, QuestionIn, Player, Question, PlayerIn
 from .storage import read_db, write_db
 from .game import GAME, players
 
@@ -55,6 +56,69 @@ def answer(payload: AnswerIn):
 @app.get("/api/podium")
 def podium():
     return GAME.podium()
+
+
+# --- Players API ---
+MAX_PLAYERS = 20
+
+
+def serialize_player(p: Player) -> dict:
+    return {
+        "id": p.name,  # usamos el nombre como id
+        "name": p.name,
+        "score": p.score,
+        "correct": p.correct,
+        "wrong": p.wrong,
+    }
+
+
+def find_player_index(pid: str) -> int:
+    for i, p in enumerate(players):
+        if p.name == pid:
+            return i
+    return -1
+
+
+@app.get("/api/players")
+def list_players():
+    return [serialize_player(p) for p in players]
+
+
+@app.post("/api/players")
+def create_player(data: PlayerIn):
+    name = data.name.strip()
+    if not name:
+        raise HTTPException(400, "Nombre inválido")
+    if len(players) >= MAX_PLAYERS:
+        raise HTTPException(400, "Máximo 20 jugadores")
+    if any(p.name.lower() == name.lower() for p in players):
+        raise HTTPException(400, "El jugador ya existe")
+    new_player = Player(name)
+    players.append(new_player)
+    return serialize_player(new_player)
+
+
+@app.put("/api/players/{pid}")
+def update_player(pid: str, data: PlayerIn):
+    idx = find_player_index(pid)
+    if idx < 0:
+        raise HTTPException(404, "Jugador no encontrado")
+    new_name = data.name.strip()
+    if not new_name:
+        raise HTTPException(400, "Nombre inválido")
+    if any(p.name.lower() == new_name.lower() and p.name != pid for p in players):
+        raise HTTPException(400, "El jugador ya existe")
+    players[idx].name = new_name
+    return serialize_player(players[idx])
+
+
+@app.delete("/api/players/{pid}")
+def delete_player(pid: str):
+    idx = find_player_index(pid)
+    if idx < 0:
+        raise HTTPException(404, "Jugador no encontrado")
+    players.pop(idx)
+    return {"deleted": pid}
 
 
 # CRUD ADMIN (Question)
