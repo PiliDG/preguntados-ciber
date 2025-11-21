@@ -3,34 +3,27 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title> Debuggeadas</title>
+    <title>Debuggeadas</title>
     <link rel="stylesheet" href="/static/styles.css" />
   </head>
   <body>
     <div class="menu-container">
-      <header class="glow-title"> Debuggeadas</header>
+      <header class="glow-title">Debuggeadas</header>
 
       <main class="menu">
-        <button class="btn-menu" id="addPlayers"> Agregar jugadores</button>
-        <button class="btn-menu" id="startGame"> Iniciar juego</button>
-        <button class="btn-menu" id="viewPodium"> Ver podio / marcador</button>
-        <button class="btn-menu" id="instructions"> Instrucciones</button>
-        <button class="btn-menu" id="crud"> Editar preguntas y categorías</button>
-        <button class="btn-menu" id="editPlayers"> Editar jugadores</button>
-        <button class="btn-menu exit"> Salir</button>
+        <button class="btn-menu" id="btn-add-players">Agregar jugadores</button>
+        <button class="btn-menu" id="btn-start-game">Iniciar juego</button>
+        <button class="btn-menu" id="btn-podium">Ver podio / marcador</button>
+        <button class="btn-menu" id="btn-instructions">Instrucciones</button>
+        <button class="btn-menu" id="btn-admin-questions">Editar preguntas y categorías</button>
+        <button class="btn-menu" id="btn-edit-players">Editar jugadores</button>
+        <button class="btn-menu" id="btn-exit">Salir</button>
       </main>
 
       <footer>debuggeadas</footer>
     </div>
 
-    <script>
-      document.getElementById("addPlayers").onclick = () => alert("Función próximamente ");
-      document.getElementById("startGame").onclick = () => alert("Iniciando partida...");
-      document.getElementById("viewPodium").onclick = () => alert("Mostrando podio ");
-      document.getElementById("instructions").onclick = () => alert("Instrucciones del juego ");
-      document.getElementById("crud").onclick = () => alert("Abrir editor de preguntas ");
-      document.getElementById("editPlayers").onclick = () => alert("Editar jugadores ");
-      document.querySelector(".exit").onclick = () => alert("Gracias por jugar ");
-    </script>
+    <script src="/static/menu.js"></script>
   </body>
-</html>
+  </html>
+
