@@ -40,6 +40,8 @@ body {
   font-weight: 600;
   background: linear-gradient(145deg, #ff69b4, #ff4da6);
   color: white;
+  text-decoration: none;
+  text-align: center;
   border: none;
   border-radius: 12px;
   cursor: pointer;

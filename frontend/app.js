@@ -64,7 +64,7 @@ const b = document.createElement('button'); b.textContent = opt; b.onclick = ()=
 async function answer(qid, idx){
 const res = await fetchJSON('/api/answer', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({player: state.player, question_id: qid, option_index: idx})});
 const toast = document.getElementById('toast');
-if(res.result.correct){ toast.className='toast ok'; toast.textContent='¡Correcto! +10 pts'; }
+if(res.result.correct){ toast.className='toast ok'; toast.textContent='Correcto! +10 pts'; }
 else { toast.className='toast bad'; toast.textContent=`Incorrecto. Respuesta correcta: ${res.result.answer_index+1}`; }
 state.current = res.next; renderQuestion(); refreshPodium();
 }
@@ -74,10 +74,11 @@ async function refreshPodium(){
 const podium = await fetchJSON('/api/podium');
 const list = document.getElementById('podium'); list.innerHTML='';
 podium.slice(0,3).forEach((p,i)=>{
-const li=document.createElement('li'); li.innerHTML = `<span>#${i+1} ${p.name}</span><b>${p.score} pts</b> <small>(✔ ${p.correct} · ✖ ${p.wrong})</small>`; list.appendChild(li);
+const li=document.createElement('li'); li.innerHTML = `<span>#${i+1} ${p.name}</span><b>${p.score} pts</b> <small>(+ ${p.correct} / - ${p.wrong})</small>`; list.appendChild(li);
 });
 }
 
 
 document.getElementById('spinBtn').addEventListener('click', spin);
 loadCategories().then(refreshPodium);
+

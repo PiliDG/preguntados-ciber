@@ -1,6 +1,8 @@
 function goTo(section) {
-  alert("Abrir sección: " + section);
-  // más adelante, reemplazaremos esto por navegación real
+  // navegación simple; reemplaza los alerts
+  if (typeof section === 'string') {
+    window.location.href = section;
+  }
 }
 
 function startGame() {
@@ -8,7 +10,7 @@ function startGame() {
   fetch("/api/players")
     .then(res => res.json())
     .then(players => {
-      if (players.length === 0) {
+      if (Array.isArray(players) && players.length === 0) {
         alert("Debes agregar al menos un jugador para iniciar.");
       } else {
         window.location.href = "/static/game.html"; // el juego real
@@ -20,7 +22,8 @@ function startGame() {
 }
 
 function exitGame() {
-  if (confirm("¿Seguro que querés salir de Debuggeadas? 💖")) {
+  if (confirm("¿Seguro que querés salir de Debuggeadas?")) {
     window.close();
   }
 }
+
