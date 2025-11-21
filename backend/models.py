@@ -16,6 +16,8 @@ class QuestionIn(BaseModel):
     answer_index: int
 
 
+
+
 @dataclass
 class Question:
     id: str
@@ -57,4 +59,3 @@ class Player:
             "correct": self.correct,
             "wrong": self.wrong,
         }
-
