@@ -7,7 +7,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 import requests
 
-from .models import AnswerIn, QuestionIn, Player, Question, PlayerIn
+from pydantic import BaseModel
+from .models import AnswerIn, QuestionIn, Player, Question
 from .storage import read_db, write_db
 from .game import GAME, players
 
@@ -30,6 +31,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+# Modelo local para alta/edición de jugadores
+class PlayerIn(BaseModel):
+    name: str
 
 
 @app.get("/api/categories")
