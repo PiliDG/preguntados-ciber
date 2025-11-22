@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+﻿from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -12,7 +12,7 @@ from .game import Game
 
 app = FastAPI(title="Preguntados Ciber")
 
-# Serve frontend estático
+# Serve frontend estÃ¡tico
 FRONT_DIR = os.path.join(os.path.dirname(__file__), "..", "frontend")
 app.mount("/static", StaticFiles(directory=FRONT_DIR), name="static")
 
@@ -20,9 +20,8 @@ app.mount("/static", StaticFiles(directory=FRONT_DIR), name="static")
 def index_root():
     return FileResponse(os.path.join(FRONT_DIR, "index.html"))
 
-# Juego en memoria (simple). Para múltiples sesiones usarías un store.
-players = [Player("Pili")]
-GAME = Game(players)
+# Juego en memoria (simple). Para mÃºltiples sesiones usarÃ­as un store.
+players: List[Player] = []`r`nGAME = Game(players)
 
 class AnswerIn(BaseModel):
     player: str
@@ -49,7 +48,7 @@ def get_questions(category: Optional[str] = None):
     db = read_db()
     if category:
         if category not in db["categories"]:
-            raise HTTPException(404, "Categoría no encontrada")
+            raise HTTPException(404, "CategorÃ­a no encontrada")
         ids = db["categories"][category]["question_ids"]
         return [db["questions"][qid] for qid in ids]
     return list(db["questions"].values())
@@ -86,7 +85,7 @@ def admin_create(q: QuestionIn):
     new_id = f"Q{len(db['questions'])+1:04d}"
     obj = Question(id=new_id, category=q.category, text=q.text, options=q.options, answer_index=q.answer_index)
     db["questions"][new_id] = obj.to_dict()
-    # asegurar categoría
+    # asegurar categorÃ­a
     db["categories"].setdefault(q.category, {"name": q.category, "question_ids": []})
     db["categories"][q.category]["question_ids"].append(new_id)
     write_db(db)
@@ -98,7 +97,7 @@ def admin_update(qid: str, q: QuestionIn):
     if qid not in db["questions"]:
         raise HTTPException(404, "Pregunta no encontrada")
     obj = Question(id=qid, category=q.category, text=q.text, options=q.options, answer_index=q.answer_index)
-    # actualizar categoría si cambió
+    # actualizar categorÃ­a si cambiÃ³
     old_cat = db["questions"][qid]["category"]
     if old_cat != q.category:
         if qid in db["categories"][old_cat]["question_ids"]:
@@ -129,3 +128,57 @@ def ping():
         return {"ok": True, "httpbin": r.status_code}
     except Exception:
         return {"ok": True, "httpbin": "unreachable"}
+
+
+# --- Players API (en memoria) ---
+class PlayerIn(BaseModel):
+    name: str
+
+MAX_PLAYERS = 20
+
+def serialize_player(p: Player) -> dict:
+    return {"id": p.name, "name": p.name, "score": p.score, "correct": p.correct, "wrong": p.wrong}
+
+def find_player_index(pid: str) -> int:
+    for i, p in enumerate(players):
+        if p.name == pid:
+            return i
+    return -1
+
+@app.get("/api/players")
+def list_players():
+    return [serialize_player(p) for p in players]
+
+@app.post("/api/players")
+def create_player(data: PlayerIn):
+    name = data.name.strip()
+    if not name:
+        raise HTTPException(400, "Nombre inválido")
+    if len(players) >= MAX_PLAYERS:
+        raise HTTPException(400, "Máximo 20 jugadores")
+    if any(p.name.lower() == name.lower() for p in players):
+        raise HTTPException(400, "El jugador ya existe")
+    new_p = Player(name)
+    players.append(new_p)
+    return serialize_player(new_p)
+
+@app.put("/api/players/{pid}")
+def update_player(pid: str, data: PlayerIn):
+    idx = find_player_index(pid)
+    if idx < 0:
+        raise HTTPException(404, "Jugador no encontrado")
+    new_name = data.name.strip()
+    if not new_name:
+        raise HTTPException(400, "Nombre inválido")
+    if any(p.name.lower() == new_name.lower() and p.name != pid for p in players):
+        raise HTTPException(400, "El jugador ya existe")
+    players[idx].name = new_name
+    return serialize_player(players[idx])
+
+@app.delete("/api/players/{pid}")
+def delete_player(pid: str):
+    idx = find_player_index(pid)
+    if idx < 0:
+        raise HTTPException(404, "Jugador no encontrado")
+    players.pop(idx)
+    return {"deleted": pid}
