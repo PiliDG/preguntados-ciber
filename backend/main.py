@@ -1,52 +1,64 @@
-import os
-import logging
-from typing import List
-from fastapi import FastAPI, HTTPException, Request
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
+from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel
+from typing import List, Optional
+import os
 import requests
 
-from pydantic import BaseModel
-from .models import AnswerIn, QuestionIn, Player, Question
+from .models import Player, Question
 from .storage import read_db, write_db
-from .game import GAME, players
+from .game import Game
 
+app = FastAPI(title="Preguntados Ciber")
 
-app = FastAPI()
+# Serve frontend estático
+FRONT_DIR = os.path.join(os.path.dirname(__file__), "..", "frontend")
+app.mount("/static", StaticFiles(directory=FRONT_DIR), name="static")
 
-# Logging básico para ver estado en arranque y requests
-LOG_LEVEL = os.environ.get("LOG_LEVEL", "INFO").upper()
-logging.basicConfig(
-    level=LOG_LEVEL,
-    format="%(asctime)s %(levelname)s %(name)s - %(message)s",
-)
-logger = logging.getLogger("preguntados")
+@app.get("/")
+def index_root():
+    return FileResponse(os.path.join(FRONT_DIR, "index.html"))
 
-# Permitir CORS amplio para facilitar desarrollo local
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# Juego en memoria (simple). Para múltiples sesiones usarías un store.
+players = [Player("Pili")]
+GAME = Game(players)
 
+class AnswerIn(BaseModel):
+    player: str
+    question_id: str
+    option_index: int
 
-# Modelo local para alta/edición de jugadores
-class PlayerIn(BaseModel):
-    name: str
+class QuestionIn(BaseModel):
+    category: str
+    text: str
+    options: List[str]
+    answer_index: int
 
+@app.get("/")
+def index_root():
+    return FileResponse(os.path.join(FRONT_DIR, "index.html"))
 
 @app.get("/api/categories")
-def categories():
-    return GAME.categories()
+def get_categories():
+    db = read_db()
+    return sorted(db["categories"].keys())
 
+@app.get("/api/questions")
+def get_questions(category: Optional[str] = None):
+    db = read_db()
+    if category:
+        if category not in db["categories"]:
+            raise HTTPException(404, "Categoría no encontrada")
+        ids = db["categories"][category]["question_ids"]
+        return [db["questions"][qid] for qid in ids]
+    return list(db["questions"].values())
 
 @app.post("/api/spin")
 def spin():
-    return GAME.spin()
-
+    cat = GAME.spin_wheel()
+    q = GAME.next_question()
+    return {"category": cat, "question": q}
 
 @app.post("/api/answer")
 def answer(payload: AnswerIn):
@@ -58,81 +70,15 @@ def answer(payload: AnswerIn):
     next_q = GAME.next_question()
     return {"result": result, "next": next_q}
 
-
 @app.get("/api/podium")
 def podium():
     return GAME.podium()
-
-
-# --- Players API ---
-MAX_PLAYERS = 20
-
-
-def serialize_player(p: Player) -> dict:
-    return {
-        "id": p.name,  # usamos el nombre como id
-        "name": p.name,
-        "score": p.score,
-        "correct": p.correct,
-        "wrong": p.wrong,
-    }
-
-
-def find_player_index(pid: str) -> int:
-    for i, p in enumerate(players):
-        if p.name == pid:
-            return i
-    return -1
-
-
-@app.get("/api/players")
-def list_players():
-    return [serialize_player(p) for p in players]
-
-
-@app.post("/api/players")
-def create_player(data: PlayerIn):
-    name = data.name.strip()
-    if not name:
-        raise HTTPException(400, "Nombre inválido")
-    if len(players) >= MAX_PLAYERS:
-        raise HTTPException(400, "Máximo 20 jugadores")
-    if any(p.name.lower() == name.lower() for p in players):
-        raise HTTPException(400, "El jugador ya existe")
-    new_player = Player(name)
-    players.append(new_player)
-    return serialize_player(new_player)
-
-
-@app.put("/api/players/{pid}")
-def update_player(pid: str, data: PlayerIn):
-    idx = find_player_index(pid)
-    if idx < 0:
-        raise HTTPException(404, "Jugador no encontrado")
-    new_name = data.name.strip()
-    if not new_name:
-        raise HTTPException(400, "Nombre inválido")
-    if any(p.name.lower() == new_name.lower() and p.name != pid for p in players):
-        raise HTTPException(400, "El jugador ya existe")
-    players[idx].name = new_name
-    return serialize_player(players[idx])
-
-
-@app.delete("/api/players/{pid}")
-def delete_player(pid: str):
-    idx = find_player_index(pid)
-    if idx < 0:
-        raise HTTPException(404, "Jugador no encontrado")
-    players.pop(idx)
-    return {"deleted": pid}
-
 
 # CRUD ADMIN (Question)
 @app.get("/api/admin/questions")
 def admin_list():
     db = read_db()
     return list(db["questions"].values())
-
 
 @app.post("/api/admin/questions")
 def admin_create(q: QuestionIn):
@@ -145,7 +91,6 @@ def admin_create(q: QuestionIn):
     db["categories"][q.category]["question_ids"].append(new_id)
     write_db(db)
     return obj.to_dict()
-
 
 @app.put("/api/admin/questions/{qid}")
 def admin_update(qid: str, q: QuestionIn):
@@ -164,7 +109,6 @@ def admin_update(qid: str, q: QuestionIn):
     write_db(db)
     return obj.to_dict()
 
-
 @app.delete("/api/admin/questions/{qid}")
 def admin_delete(qid: str):
     db = read_db()
@@ -177,48 +121,11 @@ def admin_delete(qid: str):
     write_db(db)
     return {"deleted": qid}
 
-
 @app.get("/api/ping")
 def ping():
-    # Ejemplo de uso de 'requests' (si no hay red, retorna unreachable)
+    # Ejemplo de uso de 'requests' para cumplir consigna (no obligatorio en runtime)
     try:
         r = requests.get("https://httpbin.org/get", timeout=3)
         return {"ok": True, "httpbin": r.status_code}
     except Exception:
         return {"ok": True, "httpbin": "unreachable"}
-
-
-# Serve frontend (index.html, JS, CSS)
-FRONTEND_DIR = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "frontend"))
-
-
-@app.get("/")
-def root():
-    index_path = os.path.join(FRONTEND_DIR, "index.html")
-    if os.path.exists(index_path):
-        return FileResponse(index_path)
-    return {"message": "Backend OK. Add frontend/index.html to serve UI."}
-
-
-app.mount("/static", StaticFiles(directory=FRONTEND_DIR), name="static")
-
-
-@app.on_event("startup")
-async def _startup_log():
-    index_path = os.path.join(FRONTEND_DIR, "index.html")
-    logger.info("Arrancando FastAPI + Frontend")
-    logger.info("Frontend dir: %s (index.html=%s)", FRONTEND_DIR, os.path.exists(index_path))
-    api_routes = sorted({getattr(r, "path", "") for r in app.routes if getattr(r, "path", "").startswith("/api")})
-    logger.info("Rutas API registradas: %s", api_routes)
-    try:
-        cats = GAME.categories()
-        logger.info("Categorías disponibles: %d", len(cats))
-    except Exception as e:
-        logger.exception("Error al cargar categorías: %s", e)
-
-
-@app.middleware("http")
-async def _log_requests(request: Request, call_next):
-    response = await call_next(request)
-    logger.info("%s %s -> %s", request.method, request.url.path, response.status_code)
-    return response

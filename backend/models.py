@@ -1,32 +1,23 @@
+from __future__ import annotations
+from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from typing import List, Dict
-from pydantic import BaseModel
+from typing import List, Dict, Any
 
-
-class AnswerIn(BaseModel):
-    player: str
-    question_id: str
-    option_index: int
-
-
-class QuestionIn(BaseModel):
-    category: str
-    text: str
-    options: List[str]
-    answer_index: int
-
-
-
+class BaseEntity(ABC):
+    """Entidad base abstracta para el proyecto."""
+    @abstractmethod
+    def to_dict(self) -> Dict[str, Any]:
+        ...
 
 @dataclass
-class Question:
+class Question(BaseEntity):
     id: str
     category: str
     text: str
     options: List[str]
     answer_index: int
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> Dict[str, Any]:
         return {
             "id": self.id,
             "category": self.category,
@@ -35,27 +26,31 @@ class Question:
             "answer_index": self.answer_index,
         }
 
-
 @dataclass
-class Category:
+class Category(BaseEntity):
     name: str
     question_ids: List[str] = field(default_factory=list)
 
-    def to_dict(self) -> Dict:
-        return {"name": self.name, "question_ids": list(self.question_ids)}
+    def to_dict(self) -> Dict[str, Any]:
+        return {"name": self.name, "question_ids": self.question_ids}
 
+class Player(BaseEntity):
+    """Jugador con encapsulamiento de su puntaje."""
+    def __init__(self, name: str):
+        self.name = name
+        self.__score = 0  # privado
+        self.correct = 0
+        self.wrong = 0
 
-@dataclass
-class Player:
-    name: str
-    score: int = 0
-    correct: int = 0
-    wrong: int = 0
+    def add_points(self, points: int) -> None:
+        self.__score += points
 
-    def to_dict(self) -> Dict:
-        return {
-            "name": self.name,
-            "score": self.score,
-            "correct": self.correct,
-            "wrong": self.wrong,
-        }
+    def lose_points(self, points: int) -> None:
+        self.__score = max(0, self.__score - points)
+
+    @property
+    def score(self) -> int:
+        return self.__score
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {"name": self.name, "score": self.__score, "correct": self.correct, "wrong": self.wrong}
