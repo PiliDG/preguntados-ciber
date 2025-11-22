@@ -6,7 +6,9 @@ from .models import Player
 
 
 class Game:
-    def __init__(self) -> None:
+    def __init__(self, players: Optional[List[Player]] = None) -> None:
+        # Jugadores compartidos con el exterior (por referencia)
+        self.players: List[Player] = players if players is not None else []
         self._load()
 
     def _load(self) -> None:
@@ -41,6 +43,16 @@ class Game:
             self.asked_ids.add(qid)
         return {"category": cat, "question": q}
 
+    # Compatibilidad: girar ruleta y devolver solo la categoría
+    def spin_wheel(self) -> Optional[str]:
+        cats = self.categories()
+        if not cats:
+            self.last_category = None
+            return None
+        cat = random.choice(cats)
+        self.last_category = cat
+        return cat
+
     def next_question(self) -> Optional[Dict]:
         all_ids = list(self.db.get("questions", {}).keys())
         remaining = [q for q in all_ids if q not in self.asked_ids]
@@ -68,15 +80,10 @@ class Game:
     def podium(self) -> List[Dict]:
         # Ordenar por score desc, correct desc, wrong asc, nombre asc
         ordered = sorted(
-            players,
+            self.players,
             key=lambda p: (-p.score, -p.correct, p.wrong, p.name.lower()),
         )
         return [p.to_dict() for p in ordered]
 
 
-# Jugadores en memoria
-players: List[Player] = []
-
-# Instancia global del juego
-GAME = Game()
-
+# Nota: La instancia del juego se crea en main.py pasando la lista de jugadores
