@@ -71,6 +71,8 @@ const state = {
   preguntaActual: null,
   cuentaRegresivaId: null,
   timeoutResultadoId: null,
+  colores: ['#ffc3df','#c3e9ff','#c4ffd7','#fff0b3','#e0c3ff'],
+  categoriasOrden: [],
 };
 
 async function cargarJugadores(){
@@ -107,12 +109,15 @@ function tirarRuleta(){
   btn.disabled = true;
   const r = document.getElementById('ruleta');
   r.classList.add('girando');
-  const categorias = Object.keys(bancoPreguntas);
+  const categorias = state.categoriasOrden;
   setTimeout(()=>{
     r.classList.remove('girando');
     const cat = categorias[Math.floor(Math.random()*categorias.length)];
     state.categoriaActual = cat;
     document.getElementById('categoriaElegida').textContent = `Categoría: ${cat}`;
+    // cambiar a pantalla de pregunta
+    document.getElementById('pantalla-ruleta').classList.add('hidden');
+    document.getElementById('pantalla-pregunta').classList.remove('hidden');
     mostrarPregunta(cat);
   }, 1800);
 }
@@ -127,16 +132,17 @@ function mostrarPregunta(categoria){
   const q = lista[Math.floor(Math.random()*lista.length)];
   state.preguntaActual = q;
 
-  const cont = document.getElementById('contenedorPregunta');
   const texto = document.getElementById('textoPregunta');
   const opciones = document.getElementById('opciones');
   const timer = document.getElementById('timer');
   const resultado = document.getElementById('resultado');
+  const encabezado = document.getElementById('encabezadoPregunta');
 
   resultado.textContent = '';
   texto.textContent = q.texto;
   opciones.innerHTML = '';
-  cont.classList.remove('hidden');
+  const jugador = state.jugadores[state.indiceJugadorActual] || '—';
+  encabezado.textContent = `Categoría: ${categoria} — Turno de: ${jugador}`;
 
   q.opciones.forEach((op, i)=>{
     const b = document.createElement('button');
@@ -180,8 +186,9 @@ function evaluarRespuesta(indice){
 }
 
 function pasarAlSiguienteTurno(){
-  // limpiar UI pregunta
-  document.getElementById('contenedorPregunta').classList.add('hidden');
+  // limpiar UI pregunta y volver a ruleta
+  document.getElementById('pantalla-pregunta').classList.add('hidden');
+  document.getElementById('pantalla-ruleta').classList.remove('hidden');
   document.getElementById('opciones').innerHTML = '';
   document.getElementById('resultado').textContent = '';
   document.getElementById('timer').textContent = 'Tiempo restante: 15';
@@ -202,6 +209,23 @@ function salirAlMenu(){
 }
 
 document.addEventListener('DOMContentLoaded', async ()=>{
+  // preparar colores y lista de categorías
+  state.categoriasOrden = Object.keys(bancoPreguntas);
+  // pintar ruleta según colores
+  const seg = 360 / state.categoriasOrden.length;
+  const parts = state.categoriasOrden.map((_, i)=> `${state.colores[i % state.colores.length]} ${Math.floor(i*seg)}deg ${Math.floor((i+1)*seg)}deg`);
+  const ruleta = document.getElementById('ruleta');
+  ruleta.style.background = `conic-gradient(${parts.join(',')})`;
+  // render lista de categorías con puntos de color
+  const ul = document.getElementById('listaCategorias');
+  state.categoriasOrden.forEach((cat, i)=>{
+    const li = document.createElement('li');
+    const dot = document.createElement('span'); dot.className='dot'; dot.style.background = state.colores[i % state.colores.length];
+    const num = document.createElement('strong'); num.textContent = (i+1)+'.';
+    const name = document.createElement('span'); name.textContent = cat;
+    li.append(dot, num, name); ul.appendChild(li);
+  });
+
   // cargar jugadores y decidir si se puede jugar
   await cargarJugadores();
   if(state.jugadores.length === 0){
@@ -212,4 +236,3 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   document.getElementById('btnTirar').addEventListener('click', tirarRuleta);
   document.getElementById('btnVolverMenu').addEventListener('click', (e)=>{ e.preventDefault(); salirAlMenu(); });
 });
-

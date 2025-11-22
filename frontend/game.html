@@ -6,7 +6,7 @@
     <title>Debuggeadas — Juego</title>
     <link rel="stylesheet" href="/static/styles.css" />
     <style>
-      .ruleta { width:240px; height:240px; border-radius:50%; border:2px solid rgba(255,255,255,.25); margin:10px auto; background:conic-gradient(#ff2aa1 0 72deg,#1a0011 72deg 144deg,#ff9ad6 144deg 216deg,#0f0014 216deg 288deg,#ff66b3 288deg 360deg); box-shadow:0 0 18px rgba(255,46,139,.35); position:relative }
+      .ruleta { width:260px; height:260px; border-radius:50%; border:2px solid rgba(255,255,255,.25); margin:10px auto; background:conic-gradient(#ffc3df 0 72deg,#c3e9ff 72deg 144deg,#c4ffd7 144deg 216deg,#fff0b3 216deg 288deg,#e0c3ff 288deg 360deg); box-shadow:0 0 18px rgba(255,46,139,.35); position:relative }
       .indicador { width:0; height:0; border-left:10px solid transparent; border-right:10px solid transparent; border-bottom:14px solid #ff2aa1; position:absolute; top:-18px; left:50%; transform:translateX(-50%); filter:drop-shadow(0 0 4px #ff2aa1)}
       .ruleta.girando { animation:spin 1.8s cubic-bezier(.15,.85,.25,1) }
       @keyframes spin { to { transform:rotate(1080deg) } }
@@ -15,6 +15,11 @@
       .question-card { background:rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.25); border-radius:12px; padding:14px; margin-top:12px }
       .question-card .options { display:grid; grid-template-columns:1fr; gap:8px; margin-top:10px }
       .muted { opacity:.9 }
+      .game-grid { display:grid; grid-template-columns:1.2fr 1fr; gap:16px; align-items:start }
+      @media (max-width:900px){ .game-grid { grid-template-columns:1fr } }
+      .cat-list { list-style:none; padding:0; margin:8px 0 }
+      .cat-list li { display:flex; align-items:center; gap:8px; padding:6px 8px; background:rgba(0,0,0,.2); border:1px solid rgba(255,255,255,.1); border-radius:10px; margin:6px 0 }
+      .dot { width:10px; height:10px; border-radius:50% }
     </style>
   </head>
   <body>
@@ -31,28 +36,41 @@
       </div>
 
       <div id="pantalla-juego" class="hidden">
-        <div class="center" style="margin-bottom:6px">
+        <div class="center" style="margin-bottom:8px">
           <strong id="turnoTexto">Turno de: —</strong>
         </div>
 
-        <div class="ruleta-wrap center">
-          <div class="ruleta" id="ruleta">
-            <div class="indicador"></div>
+        <!-- Pantalla ruleta -->
+        <section id="pantalla-ruleta" class="game-grid">
+          <div class="center">
+            <div class="ruleta" id="ruleta">
+              <div class="indicador"></div>
+            </div>
+            <button id="btnTirar" class="btn-menu" style="max-width:320px; margin:10px auto 0">Girar ruleta</button>
+            <div class="muted" id="categoriaElegida" style="margin-top:8px"></div>
           </div>
-          <button id="btnTirar" class="btn-menu" style="max-width:320px; margin:10px auto 0">Tirar ruleta</button>
-          <div class="muted" id="categoriaElegida" style="margin-top:8px"></div>
-        </div>
+          <aside>
+            <h3 class="center">Categorías</h3>
+            <ul id="listaCategorias" class="cat-list"></ul>
+            <div class="actions" style="justify-content:center; margin-top:8px">
+              <a class="btn" href="/static/podium.html">Ver marcador</a>
+            </div>
+          </aside>
+        </section>
 
-        <div id="contenedorPregunta" class="question-card hidden">
-          <div id="textoPregunta" style="font-weight:600"></div>
-          <div class="options" id="opciones"></div>
-          <div id="timer" class="muted">Tiempo restante: 15</div>
-          <div id="resultado" class="muted"></div>
-        </div>
+        <!-- Pantalla pregunta -->
+        <section id="pantalla-pregunta" class="hidden">
+          <div class="question-card">
+            <div class="muted" id="encabezadoPregunta" style="margin-bottom:6px"></div>
+            <div id="textoPregunta" style="font-weight:700; font-size:1.05rem"></div>
+            <div class="options" id="opciones"></div>
+            <div id="timer" class="muted">Tiempo restante: 15</div>
+            <div id="resultado" class="muted"></div>
+          </div>
+        </section>
       </div>
     </div>
 
     <script src="/static/game.js"></script>
   </body>
   </html>
-

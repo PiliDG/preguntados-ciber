@@ -15,7 +15,10 @@
   <!-- Selector de categoría -->
   <section style="margin-top:10px">
     <label for="categoriaSelect" style="display:block; margin-bottom:6px">Categoría</label>
-    <select id="categoriaSelect" style="width:100%; padding:10px; border-radius:10px; background:rgba(0,0,0,.25); color:#fff; border:1px solid rgba(255,255,255,.15)"></select>
+    <div style="display:flex; gap:10px; align-items:center">
+      <select id="categoriaSelect" style="flex:1; padding:10px; border-radius:10px; background:rgba(0,0,0,.25); color:#fff; border:1px solid rgba(255,255,255,.15)"></select>
+      <button id="btnEliminarCategoria" class="btn ghost" type="button">Eliminar categoría</button>
+    </div>
   </section>
 
   <!-- Listado de preguntas -->

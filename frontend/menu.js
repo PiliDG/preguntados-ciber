@@ -1,11 +1,13 @@
 "use strict";
 
-// Mapea los botones del menú a sus pantallas correspondientes
+// Navegación del menú principal (sin botón Salir)
 document.addEventListener("DOMContentLoaded", () => {
+  // Agregar y administrar jugadores
   document.getElementById("btn-add-players")?.addEventListener("click", () => {
     window.location.href = "/static/add_players.html";
   });
 
+  // Iniciar juego: validar jugadores
   document.getElementById("btn-start-game")?.addEventListener("click", async (ev) => {
     ev.preventDefault();
     try{
@@ -13,7 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = r.ok ? await r.json() : [];
       const cantidad = Array.isArray(data) ? data.length : 0;
       if(cantidad === 0){
-        // Mostrar mensaje visible en la misma página
         let box = document.getElementById('msg-no-players');
         if(!box){
           box = document.createElement('div');
@@ -33,7 +34,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       window.location.href = "/static/game.html";
     }catch{
-      // En caso de error de red, mantener en menú
       console.warn('No se pudo validar jugadores');
     }
   });
@@ -49,13 +49,5 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("btn-admin-questions")?.addEventListener("click", () => {
     window.location.href = "/static/admin_questions.html";
   });
-
-  document.getElementById("btn-edit-players")?.addEventListener("click", () => {
-    window.location.href = "/static/edit_players.html";
-  });
-
-  document.getElementById("btn-exit")?.addEventListener("click", () => {
-    window.location.href = "/";
-    // Si quisieras cerrar la pestaña en un entorno permitido: window.close();
-  });
 });
+

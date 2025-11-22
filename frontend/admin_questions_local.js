@@ -94,9 +94,11 @@ function renderPreguntas(){
     const li = document.createElement("li");
     li.className = "player-item";
     const txt = document.createElement("div"); txt.textContent = pregunta.texto;
-    const btn = document.createElement("button"); btn.textContent = "Editar"; btn.className = "btn";
-    btn.addEventListener("click", ()=> cargarPreguntaEnFormulario(index));
-    li.append(txt, btn); lista.appendChild(li);
+    const btnEditar = document.createElement("button"); btnEditar.textContent = "Editar"; btnEditar.className = "btn";
+    const btnEliminar = document.createElement("button"); btnEliminar.textContent = "Eliminar"; btnEliminar.className = "btn ghost";
+    btnEditar.addEventListener("click", ()=> cargarPreguntaEnFormulario(index));
+    btnEliminar.addEventListener("click", ()=> eliminarPregunta(index));
+    li.append(txt, btnEditar, btnEliminar); lista.appendChild(li);
   });
 }
 
@@ -165,5 +167,45 @@ document.addEventListener("DOMContentLoaded", ()=>{
   $("#formPregunta").addEventListener("submit", guardarPreguntaDesdeFormulario);
   $("#btnCancelarEdicion").addEventListener("click", limpiarFormularioPregunta);
   $("#formNuevaCategoria").addEventListener("submit", crearNuevaCategoria);
+  $("#btnEliminarCategoria").addEventListener("click", eliminarCategoriaActual);
 });
 
+// Eliminar una pregunta por índice con confirmación
+function eliminarPregunta(index){
+  if(!categoriaSeleccionada) return;
+  if(!confirm("¿Seguro que querés eliminar esta pregunta?")) return;
+  const arr = bancoPreguntas[categoriaSeleccionada] || [];
+  if(index >=0 && index < arr.length){
+    arr.splice(index,1);
+    if(preguntaEditandoIndex !== null){
+      // si estaba editando la misma, limpiar formulario
+      if(preguntaEditandoIndex === index){
+        limpiarFormularioPregunta();
+      }
+      // ajustar índice si era superior
+      if(preguntaEditandoIndex > index){
+        preguntaEditandoIndex -= 1;
+      }
+    }
+    renderPreguntas();
+    showToast("Pregunta eliminada");
+  }
+}
+
+// Eliminar categoría completa con confirmación
+function eliminarCategoriaActual(){
+  if(!categoriaSeleccionada) return;
+  if(!confirm("¿Seguro que querés eliminar esta categoría y todas sus preguntas?")) return;
+  delete bancoPreguntas[categoriaSeleccionada];
+  // recargar categorías y limpiar vista
+  const keys = Object.keys(bancoPreguntas);
+  const nueva = keys.length ? keys[0] : null;
+  const sel = document.getElementById('categoriaSelect');
+  sel.innerHTML = '';
+  keys.forEach(cat=>{ const o=document.createElement('option'); o.value=cat; o.textContent=cat; sel.appendChild(o); });
+  sel.value = nueva || '';
+  categoriaSeleccionada = nueva;
+  limpiarFormularioPregunta();
+  renderPreguntas();
+  showToast("Categoría eliminada");
+}
