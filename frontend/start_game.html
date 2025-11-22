@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Debuggeadas - Juego</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <div class="screen-box">
+    <header class="top-bar">
+      <a href="/static/menu.html" class="btn-menu back">⬅ Menú</a>
+      <h1 class="title glow">Debuggeadas</h1>
+      <span class="tagline">Trivia Python · Ciber vibes</span>
+    </header>
+
+    <main class="game-grid">
+      <!-- Ruleta -->
+      <section class="panel glass wheel-panel">
+        <h2> Ruleta de categorías</h2>
+        <canvas id="wheel" width="320" height="320"></canvas>
+        <button id="spinBtn" class="btn-pink" style="margin-top:12px">
+          Girar ruleta
+        </button>
+        <p class="hint">Tip: esperá a que pare la ruleta para ver la categoría y la pregunta.</p>
+      </section>
+
+      <!-- Pregunta + opciones -->
+      <section class="panel glass question-panel">
+        <h2> Pregunta</h2>
+        <div id="category" class="badge">Categoría: —</div>
+
+        <div class="timer">
+          <div id="timer-bar"></div>
+          <span id="timer-text">15s</span>
+        </div>
+
+        <div id="qtext" class="qtext">
+          Girá la ruleta para obtener tu primera categoría...
+        </div>
+
+        <div id="options" class="options">
+          <!-- botones de respuesta se agregan por JS -->
+        </div>
+      </section>
+
+      <!-- Podio -->
+      <section class="panel glass podium-panel">
+        <h2>🏆 Podio</h2>
+        <ol id="podium"></ol>
+        <div id="toast" class="toast"></div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // === ESTADO GLOBAL ===
+    const state = {
+      player: "Pili",     // luego podemos tomarlo de la pantalla de jugadores
+      current: null,
+      spinning: false,
+      categories: [],
+      timerId: null,
+      timeLeft: 15,
+      answeringLocked: false
+    };
+
+    // === HELPERS FETCH ===
+    async function fetchJSON(url, opts = {}) {
+      const r = await fetch(url, opts);
+      if (!r.ok) throw new Error(await r.text());
+      return r.json();
+    }
+
+    // === CARGAR CATEGORÍAS Y DIBUJAR RULETA ===
+    async function loadCategories() {
+      state.categories = await fetchJSON('/api/categories');
+      drawWheel(state.categories);
+    }
+
+    function drawWheel(names) {
+      const canvas = document.getElementById('wheel');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const n = names.length || 1;
+      const radius = canvas.width / 2;
+      const cx = radius, cy = radius;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = 0; i < n; i++) {
+        const a0 = (i / n) * 2 * Math.PI;
+        const a1 = ((i + 1) / n) * 2 * Math.PI;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, radius, a0, a1);
+        ctx.closePath();
+        ctx.fillStyle = i % 2 ? '#1a0011' : '#0f0014';
+        ctx.fill();
+        ctx.strokeStyle = '#ff2aa188';
+        ctx.stroke();
+
+        // texto categoría
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate((a0 + a1) / 2);
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 12px system-ui';
+        ctx.fillText(names[i] || '—', radius * 0.6, 5);
+        ctx.restore();
+      }
+
+      // indicador fijo
+      ctx.beginPath();
+      ctx.moveTo(cx, cy - radius - 6);
+      ctx.lineTo(cx - 8, cy - radius - 22);
+      ctx.lineTo(cx + 8, cy - radius - 22);
+      ctx.closePath();
+      ctx.fillStyle = '#ff2aa1';
+      ctx.fill();
+    }
+
+    // === TIMER 15s ===
+    function resetTimer() {
+      if (state.timerId) clearInterval(state.timerId);
+      state.timeLeft = 15;
+      updateTimerUI();
+    }
+
+    function updateTimerUI() {
+      const text = document.getElementById('timer-text');
+      const bar = document.getElementById('timer-bar');
+      const percent = (state.timeLeft / 15) * 100;
+      if (text) text.textContent = state.timeLeft + 's';
+      if (bar) bar.style.width = percent + '%';
+    }
+
+    function startTimer(onTimeUp) {
+      resetTimer();
+      state.answeringLocked = false;
+      state.timerId = setInterval(() => {
+        state.timeLeft -= 1;
+        updateTimerUI();
+        if (state.timeLeft <= 0) {
+          clearInterval(state.timerId);
+          state.answeringLocked = true;
+          if (typeof onTimeUp === 'function') onTimeUp();
+        }
+      }, 1000);
+    }
+
+    // === SPIN: GIRO + TRANSICIÓN + PREGUNTA ===
+    async function spin() {
+      if (state.spinning) return;
+      state.spinning = true;
+      const btn = document.getElementById('spinBtn');
+      if (btn) btn.disabled = true;
+
+      const canvas = document.getElementById('wheel');
+      const ctx = canvas.getContext('2d');
+      let angle = 0;
+      const start = performance.now();
+      const duration = 2500 + Math.random() * 1000;
+
+      function frame(t) {
+        const p = Math.min((t - start) / duration, 1);
+        angle = p * p * 8 * Math.PI; // ease out
+        ctx.save();
+        ctx.translate(160, 160);
+        ctx.rotate(angle);
+        ctx.translate(-160, -160);
+        drawWheel(state.categories);
+        ctx.restore();
+        if (p < 1) {
+          requestAnimationFrame(frame);
+        } else {
+          finalizeSpin();
+        }
+      }
+      requestAnimationFrame(frame);
+    }
+
+    async function finalizeSpin() {
+      try {
+        // pedimos categoría + pregunta al backend
+        const data = await fetchJSON('/api/spin', { method: 'POST' });
+        state.current = data.question;
+
+        // transición de 3 segundos mostrando solo la categoría
+        const categoryEl = document.getElementById('category');
+        const qtext = document.getElementById('qtext');
+        const opts = document.getElementById('options');
+
+        if (categoryEl) categoryEl.textContent = 'Categoría: ' + (data.category || '—');
+        if (qtext) qtext.textContent = 'Preparando pregunta...';
+        if (opts) opts.innerHTML = '';
+
+        resetTimer();
+
+        setTimeout(() => {
+          renderQuestion();
+          startTimer(() => {
+            // se acabó el tiempo
+            const toast = document.getElementById('toast');
+            if (toast) {
+              toast.className = 'toast bad';
+              toast.textContent = '⏱ Tiempo agotado. Se cuenta como incorrecto.';
+            }
+            // bloqueamos respuestas
+            lockOptions();
+          });
+        }, 3000); // 3 segundos de transición
+      } catch (err) {
+        console.error(err);
+      } finally {
+        state.spinning = false;
+        const btn = document.getElementById('spinBtn');
+        if (btn) btn.disabled = false;
+      }
+
+      refreshPodium();
+    }
+
+    // === RENDER PREGUNTA / OPCIONES ===
+    function renderQuestion() {
+      const q = state.current;
+      const qtext = document.getElementById('qtext');
+      const opts = document.getElementById('options');
+      if (!q) {
+        if (qtext) qtext.textContent = 'No hay más preguntas. Girá la ruleta otra vez.';
+        if (opts) opts.innerHTML = '';
+        return;
+      }
+      if (qtext) qtext.textContent = q.text || '—';
+      if (!opts) return;
+      opts.innerHTML = '';
+      state.answeringLocked = false;
+
+      (q.options || []).forEach((opt, i) => {
+        const b = document.createElement('button');
+        b.textContent = opt;
+        b.className = 'option-btn';
+        b.onclick = () => answer(q.id, i, b);
+        opts.appendChild(b);
+      });
+    }
+
+    function lockOptions() {
+      const opts = document.getElementById('options');
+      if (!opts) return;
+      const buttons = opts.querySelectorAll('button');
+      buttons.forEach(btn => {
+        btn.disabled = true;
+        btn.classList.add('disabled');
+      });
+      state.answeringLocked = true;
+    }
+
+    // === ENVIAR RESPUESTA ===
+    async function answer(qid, idx, clickedBtn) {
+      if (state.answeringLocked) return;
+      state.answeringLocked = true;
+      lockOptions();
+      if (state.timerId) clearInterval(state.timerId);
+
+      try {
+        const payload = {
+          player: state.player,
+          question_id: qid,
+          option_index: idx
+        };
+        const res = await fetchJSON('/api/answer', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const toast = document.getElementById('toast');
+        if (res.result && res.result.correct) {
+          if (toast) {
+            toast.className = 'toast ok';
+            toast.textContent = '✅ ¡Correcto! +10 pts';
+          }
+          if (clickedBtn) clickedBtn.classList.add('correct');
+        } else {
+          if (toast) {
+            toast.className = 'toast bad';
+            toast.textContent = '❌ Incorrecto. Respuesta correcta: ' + (res.result.answer_index + 1);
+          }
+          if (clickedBtn) clickedBtn.classList.add('wrong');
+        }
+
+        state.current = res.next;
+        refreshPodium();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // === PODIO ===
+    async function refreshPodium() {
+      try {
+        const podium = await fetchJSON('/api/podium');
+        const list = document.getElementById('podium');
+        if (!list) return;
+        list.innerHTML = '';
+        podium.slice(0, 3).forEach((p, i) => {
+          const li = document.createElement('li');
+          li.innerHTML = `<span>#${i + 1} ${p.name}</span> <b>${p.score} pts</b> <small>(✔ ${p.correct} · ✖ ${p.wrong})</small>`;
+          list.appendChild(li);
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // === INICIO ===
+    window.addEventListener('DOMContentLoaded', () => {
+      const spinBtn = document.getElementById('spinBtn');
+      if (spinBtn) spinBtn.addEventListener('click', spin);
+      loadCategories().then(refreshPodium).catch(console.error);
+      resetTimer();
+    });
+  </script>
+</body>
+</html>
