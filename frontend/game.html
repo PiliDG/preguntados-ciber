@@ -5,12 +5,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Debuggeadas — Juego</title>
     <link rel="stylesheet" href="/static/styles.css" />
+    <style>
+      .ruleta { width:240px; height:240px; border-radius:50%; border:2px solid rgba(255,255,255,.25); margin:10px auto; background:conic-gradient(#ff2aa1 0 72deg,#1a0011 72deg 144deg,#ff9ad6 144deg 216deg,#0f0014 216deg 288deg,#ff66b3 288deg 360deg); box-shadow:0 0 18px rgba(255,46,139,.35); position:relative }
+      .indicador { width:0; height:0; border-left:10px solid transparent; border-right:10px solid transparent; border-bottom:14px solid #ff2aa1; position:absolute; top:-18px; left:50%; transform:translateX(-50%); filter:drop-shadow(0 0 4px #ff2aa1)}
+      .ruleta.girando { animation:spin 1.8s cubic-bezier(.15,.85,.25,1) }
+      @keyframes spin { to { transform:rotate(1080deg) } }
+      .center { text-align:center }
+      .hidden { display:none }
+      .question-card { background:rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.25); border-radius:12px; padding:14px; margin-top:12px }
+      .question-card .options { display:grid; grid-template-columns:1fr; gap:8px; margin-top:10px }
+      .muted { opacity:.9 }
+    </style>
   </head>
   <body>
-    <div class="menu-container" style="max-width:880px; width:92%">
+    <div class="menu-container" style="max-width:920px; width:95%">
       <h1 class="glow-title">Juego</h1>
-      <p style="opacity:.9; margin:6px 0 18px">Pantalla en construcción</p>
-      <a href="/static/index.html" class="btn-menu btn-volver exit">Volver al menú</a>
+
+      <div class="actions center">
+        <a href="/static/index.html" id="btnVolverMenu" class="btn btn-volver">Volver al menú</a>
+      </div>
+
+      <div id="mensajeSinJugadores" class="question-card center hidden">
+        <p>Debés agregar al menos un jugador para iniciar el juego.</p>
+        <a class="btn" href="/static/add_players.html">Agregar jugadores</a>
+      </div>
+
+      <div id="pantalla-juego" class="hidden">
+        <div class="center" style="margin-bottom:6px">
+          <strong id="turnoTexto">Turno de: —</strong>
+        </div>
+
+        <div class="ruleta-wrap center">
+          <div class="ruleta" id="ruleta">
+            <div class="indicador"></div>
+          </div>
+          <button id="btnTirar" class="btn-menu" style="max-width:320px; margin:10px auto 0">Tirar ruleta</button>
+          <div class="muted" id="categoriaElegida" style="margin-top:8px"></div>
+        </div>
+
+        <div id="contenedorPregunta" class="question-card hidden">
+          <div id="textoPregunta" style="font-weight:600"></div>
+          <div class="options" id="opciones"></div>
+          <div id="timer" class="muted">Tiempo restante: 15</div>
+          <div id="resultado" class="muted"></div>
+        </div>
+      </div>
     </div>
+
+    <script src="/static/game.js"></script>
   </body>
   </html>
+
