@@ -21,8 +21,8 @@ def index_root():
     return FileResponse(os.path.join(FRONT_DIR, "index.html"))
 
 # Juego en memoria (simple). Para mÃºltiples sesiones usarÃ­as un store.
-players: List[Player] = []`r`nGAME = Game(players)
-
+players: List[Player] = []
+GAME = Game(players)
 class AnswerIn(BaseModel):
     player: str
     question_id: str
