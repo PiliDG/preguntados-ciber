@@ -301,3 +301,9 @@ body{height:auto; background-attachment: fixed, fixed}
 .pregunta-contenido{display:flex;justify-content:space-between;align-items:center;gap:1rem}
 .pregunta-texto{flex:1}
 .pregunta-acciones{display:flex;gap:.5rem}
+
+/* Forzar alineaci�n de acciones en admin preguntas */
+.list .player-item{display:block}
+.pregunta-contenido{display:flex;justify-content:space-between;align-items:center;gap:1rem}
+.pregunta-texto{flex:1}
+.pregunta-acciones{display:flex;gap:.5rem;justify-content:flex-end}
