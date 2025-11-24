@@ -1,56 +1,141 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="es">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Debuggeadas” Juego</title>
+    <title>Debuggeadas - Juego</title>
     <link rel="stylesheet" href="/static/styles.css" />
     <style>
-      .ruleta { width:260px; height:260px; border-radius:50%; border:2px solid rgba(255,255,255,.25); margin:10px auto; background:conic-gradient(#ffc3df 0 72deg,#c3e9ff 72deg 144deg,#c4ffd7 144deg 216deg,#fff0b3 216deg 288deg,#e0c3ff 288deg 360deg); box-shadow:0 0 18px rgba(255,46,139,.35); position:relative }
-      .indicador { width:0; height:0; border-left:10px solid transparent; border-right:10px solid transparent; border-bottom:14px solid #ff2aa1; position:absolute; top:-18px; left:50%; transform:translateX(-50%); filter:drop-shadow(0 0 4px #ff2aa1)}
-      .ruleta.girando { animation:spin 1.8s cubic-bezier(.15,.85,.25,1) }
-      @keyframes spin { to { transform:rotate(1080deg) } }
-      .center { text-align:center }
-      .hidden { display:none }
-      .question-card { background:rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.25); border-radius:12px; padding:14px; margin-top:12px }
-      .question-card .options { display:grid; grid-template-columns:1fr; gap:8px; margin-top:10px }
-      .muted { opacity:.9 }
-      .game-grid { display:grid; grid-template-columns:1.2fr 1fr; gap:16px; align-items:start }
-      @media (max-width:900px){ .game-grid { grid-template-columns:1fr } }
-      .cat-list { list-style:none; padding:0; margin:8px 0 }
-      .cat-list li { display:flex; align-items:center; gap:8px; padding:6px 8px; background:rgba(0,0,0,.2); border:1px solid rgba(255,255,255,.1); border-radius:10px; margin:6px 0 }
-      .dot { width:10px; height:10px; border-radius:50% }
+      .ruleta-wrapper {
+        width: 260px;
+        height: 260px;
+        margin: 10px auto;
+        position: relative;
+      }
+      .ruleta {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 255, 255, 0.25);
+        background: conic-gradient(
+          #ffc3df 0 72deg,
+          #c3e9ff 72deg 144deg,
+          #c4ffd7 144deg 216deg,
+          #fff0b3 216deg 288deg,
+          #e0c3ff 288deg 360deg
+        );
+        box-shadow: 0 0 18px rgba(255, 46, 139, 0.35);
+      }
+      .indicador {
+        width: 0;
+        height: 0;
+        border-left: 12px solid transparent;
+        border-right: 12px solid transparent;
+        border-bottom: 18px solid #ff2aa1;
+        position: absolute;
+        top: -22px;
+        left: 50%;
+        transform: translateX(-50%);
+        filter: drop-shadow(0 0 4px #ff2aa1);
+      }
+      .overlay-categoria {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.75);
+        border-radius: 50%;
+        font-weight: 700;
+        font-size: 1rem;
+        text-align: center;
+        padding: 12px;
+        pointer-events: none;
+      }
+      .center {
+        text-align: center;
+      }
+      .hidden {
+        display: none;
+      }
+      .question-card {
+        background: rgba(0, 0, 0, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 12px;
+        padding: 14px;
+        margin-top: 12px;
+      }
+      .question-card .options {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 8px;
+        margin-top: 10px;
+      }
+      .muted {
+        opacity: 0.9;
+      }
+      .game-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
+        gap: 16px;
+        align-items: start;
+      }
+      @media (max-width: 900px) {
+        .game-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .cat-list {
+        list-style: none;
+        padding: 0;
+        margin: 8px 0;
+      }
+      .cat-list li {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 8px;
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        margin: 6px 0;
+      }
+      .dot {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+      }
     </style>
   </head>
   <body>
     <div class="menu-container" style="max-width:920px; width:95%">
       <h1 class="glow-title">Juego</h1>
 
-      <div class="actions center">
-        <a href="/static/index.html" id="btnVolverMenu" class="btn-menu btn-volver">Volver al menÃº</a>
-      </div>
-
       <div id="mensajeSinJugadores" class="question-card center hidden">
-        <p>DebÃ©s agregar al menos un jugador para iniciar el juego.</p>
+        <p>Debés agregar al menos un jugador para iniciar el juego.</p>
         <a class="btn" href="/static/add_players.html">Agregar jugadores</a>
       </div>
 
       <div id="pantalla-juego" class="hidden">
         <div class="center" style="margin-bottom:8px">
-          <strong id="turnoTexto">Turno de: â€”</strong>
+          <strong id="turnoTexto">Turno de: —</strong>
         </div>
 
         <!-- Pantalla ruleta -->
         <section id="pantalla-ruleta" class="game-grid">
           <div class="center">
-            <div class="ruleta" id="ruleta">
+            <div class="ruleta-wrapper">
               <div class="indicador"></div>
+              <div class="ruleta" id="ruleta"></div>
+              <div id="overlayCategoria" class="overlay-categoria hidden"></div>
             </div>
-            <button id="btnTirar" class="btn-menu" style="max-width:320px; margin:10px auto 0">Girar ruleta</button>
+            <button id="btnTirar" class="btn-menu" style="max-width:320px; margin:10px auto 0">
+              Girar ruleta
+            </button>
             <div class="muted" id="categoriaElegida" style="margin-top:8px"></div>
           </div>
           <aside>
-            <h3 class="center">CategorÃ­as</h3>
+            <h3 class="center">Categorías</h3>
             <ul id="listaCategorias" class="cat-list"></ul>
             <div class="actions" style="justify-content:center; margin-top:8px">
               <a class="btn" href="/static/podium.html">Ver marcador</a>
@@ -69,9 +154,13 @@
           </div>
         </section>
       </div>
+
+      <div class="actions center" style="margin-top:16px">
+        <a href="/static/index.html" id="btnVolverMenu" class="btn-menu btn-volver">Volver al menú</a>
+      </div>
     </div>
 
     <script src="/static/game.js"></script>
   </body>
-  </html>
+</html>
 
