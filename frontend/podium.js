@@ -51,19 +51,15 @@ function mostrarPodio(jugadores) {
   while (top.length < 3) top.push(null);
 
   const slots = [
-    { idx: 1, clasePed: "p2", claseMed: "m2", label: "2" },
-    { idx: 0, clasePed: "p1", claseMed: "m1", label: "1" },
-    { idx: 2, clasePed: "p3", claseMed: "m3", label: "3" },
+    { idx: 1, clasePed: "p2", label: "2" },
+    { idx: 0, clasePed: "p1", label: "1" },
+    { idx: 2, clasePed: "p3", label: "3" },
   ];
 
   slots.forEach((s) => {
     const data = top[s.idx];
     const col = document.createElement("div");
     col.className = "podio-col";
-
-    const med = document.createElement("div");
-    med.className = `medalla ${s.claseMed}`;
-    med.textContent = s.label;
 
     const nombre = document.createElement("div");
     nombre.className = "nombre";
@@ -75,8 +71,9 @@ function mostrarPodio(jugadores) {
 
     const ped = document.createElement("div");
     ped.className = `pedestal ${s.clasePed}`;
+    ped.textContent = s.label;
 
-    col.append(med, nombre, pts, ped);
+    col.append(nombre, pts, ped);
     el.appendChild(col);
   });
 }
@@ -90,9 +87,8 @@ function renderizarEstadisticas(estadisticas) {
   };
 
   // Errores por categoría
-  const se = document.getElementById("stats-errores");
   const listaErrores = document.getElementById("lista-errores");
-  if (se && listaErrores) {
+  if (listaErrores) {
     listaErrores.innerHTML = "";
     const entries = Object.entries(errores);
     if (!entries.length) {
@@ -109,9 +105,8 @@ function renderizarEstadisticas(estadisticas) {
   }
 
   // Tiempo de respuesta
-  const st = document.getElementById("stats-tiempos");
   const listaTiempos = document.getElementById("lista-tiempos");
-  if (st && listaTiempos) {
+  if (listaTiempos) {
     listaTiempos.innerHTML = "";
     const items = [
       {

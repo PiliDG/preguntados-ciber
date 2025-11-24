@@ -10,16 +10,23 @@
       .title{ text-align:center }
       .podio-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;align-items:end;margin:6px 0 18px}
       .podio-col{position:relative;text-align:center}
-      .medalla{width:68px;height:68px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-weight:800;color:#111;box-shadow:0 4px 20px rgba(0,0,0,.25)}
-      .m1{background:#ffd1a3}
-      .m2{background:#d6e2ff}
-      .m3{background:#f7c5b8}
-      .nombre{font-weight:700;margin-bottom:4px}
-      .puntos{opacity:.95}
-      .pedestal{margin-top:8px;border-radius:12px 12px 0 0;background:linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.08));border:1px solid rgba(255,255,255,.2);box-shadow:0 10px 30px rgba(0,0,0,.25)}
-      .p1{height:210px}
-      .p2{height:150px}
-      .p3{height:130px}
+      .nombre{font-weight:700;margin-bottom:2px;font-size:1.1rem}
+      .puntos{opacity:.95;font-size:0.95rem}
+      .pedestal{
+        margin-top:8px;
+        border-radius:12px 12px 0 0;
+        border:1px solid rgba(255,255,255,.2);
+        box-shadow:0 10px 30px rgba(0,0,0,.25);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-weight:800;
+        font-size:1.6rem;
+        color:#111;
+      }
+      .p1{height:210px;background:#ffd1a3}
+      .p2{height:150px;background:#d6e2ff}
+      .p3{height:130px;background:#f7c5b8}
       .stats{margin-top:18px}
       .stats h3{margin:6px 0 10px;text-align:center}
       .stats-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
@@ -29,6 +36,10 @@
       .bar span{position:absolute;left:0;top:0;bottom:0;border-radius:999px;background:linear-gradient(90deg,#ff76c2,#ff2e8b)}
       .row{display:flex;justify-content:space-between;gap:10px;align-items:center}
       .chip{display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);margin:4px 6px}
+      /* Quitar viñetas en listas de estadísticas */
+      #lista-errores,
+      #lista-tiempos,
+      #stats-campeones ul{ list-style:none; padding-left:0; margin:0; }
     </style>
   </head>
   <body>
@@ -52,9 +63,9 @@
             <div class="stats-card" id="stats-campeones">
               <h3>Campeones: mejores puntajes</h3>
               <ul>
-                <li>Delfina: 150 puntos</li>
-                <li>Pilar: 90 puntos</li>
-                <li>Guille: 70 puntos</li>
+                <li>1. Guillermo: 150 puntos</li>
+                <li>2. Delfina: 90 puntos</li>
+                <li>3. Pilar: 70 puntos</li>
               </ul>
             </div>
           </div>
@@ -67,4 +78,3 @@
     <script src="/static/podium.js"></script>
   </body>
 </html>
-
