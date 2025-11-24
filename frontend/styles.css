@@ -297,3 +297,7 @@ body{height:auto; background-attachment: fixed, fixed}
   background: rgba(255, 80, 80, 0.15);
   border: 1px solid rgba(255, 80, 80, 0.7);
 }
+/* Alineaci�n de preguntas (admin) */
+.pregunta-contenido{display:flex;justify-content:space-between;align-items:center;gap:1rem}
+.pregunta-texto{flex:1}
+.pregunta-acciones{display:flex;gap:.5rem}

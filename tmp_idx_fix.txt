@@ -1,7 +1,7 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="es">
   <head>
-    <meta charset="UTF-8" />
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Debuggeadas</title>
     <link rel="stylesheet" href="/static/styles.css" />
@@ -15,10 +15,10 @@
         <button class="btn-menu" id="btn-start-game">Iniciar juego</button>
         <button class="btn-menu" id="btn-podium">Ver podio</button>
         <button class="btn-menu" id="btn-instructions">Instrucciones</button>
-        <button class="btn-menu" id="btn-admin-questions">Editar preguntas y categorÃ­as</button>
+        <button class="btn-menu" id="btn-admin-questions">Editar preguntas y categorías</button>
       </main>
 
-      <footer>âœ¨Gracias por jugarâœ¨</footer>
+      <footer>✨Gracias por jugar✨</footer>
     </div>
 
     <script src="/static/menu.js"></script>
