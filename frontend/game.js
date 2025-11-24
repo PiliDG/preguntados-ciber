@@ -334,6 +334,15 @@ const bancoPreguntas = {
   ],
 };
 
+// Sectores de la ruleta: nombre + color
+const sectores = [
+  { nombre: "Colecciones y datos", color: "#ffc3df" }, // rosa
+  { nombre: "Lambda y funciones", color: "#c3e9ff" }, // azul
+  { nombre: "Archivos y Excepciones", color: "#c4ffd7" }, // verde
+  { nombre: "JSON y APIs", color: "#fff0b3" }, // amarillo
+  { nombre: "Recursividad y Algoritmos", color: "#e0c3ff" }, // violeta
+];
+
 const state = {
   jugadores: [],
   indiceJugadorActual: 0,
@@ -341,8 +350,9 @@ const state = {
   preguntaActual: null,
   cuentaRegresivaId: null,
   timeoutResultadoId: null,
-  colores: ["#ffc3df", "#c3e9ff", "#c4ffd7", "#fff0b3", "#e0c3ff"],
-  categoriasOrden: [],
+  colores: sectores.map((s) => s.color),
+  categoriasOrden: sectores.map((s) => s.nombre),
+  sectores,
   rotacionBase: 0,
 };
 
@@ -386,16 +396,17 @@ function tirarRuleta() {
   const btn = document.getElementById("btnTirar");
   if (btn) btn.disabled = true;
 
-  const categorias = state.categoriasOrden;
+  const sectoresActivos = state.sectores || [];
   const ruleta = document.getElementById("ruleta");
-  if (!ruleta || !categorias.length) return;
+  if (!ruleta || !sectoresActivos.length) return;
 
   // elegir categoría al azar y calcular giro alineado con el triángulo
-  const indice = Math.floor(Math.random() * categorias.length);
-  const cat = categorias[indice];
+  const indice = Math.floor(Math.random() * sectoresActivos.length);
+  const sector = sectoresActivos[indice];
+  const cat = sector.nombre;
   state.categoriaActual = cat;
 
-  const seg = 360 / categorias.length;
+  const seg = 360 / sectoresActivos.length;
   const centro = indice * seg + seg / 2; // ángulo central del sector
   state.rotacionBase += 360 * 3; // vueltas completas para animación
   const destino = state.rotacionBase + (270 - centro); // 270deg = parte superior
