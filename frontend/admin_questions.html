@@ -1,98 +1,147 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Debuggeadas” Editar preguntas y Categorías</title>
-  <link rel="stylesheet" href="/static/styles.css" />
-</head>
-<body>
-<div class="menú-container" style="max-width:980px; width:95%; padding-bottom:30px">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Debuggeadas - Editar preguntas y categorías</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div class="menu-container" style="max-width:980px; width:95%; padding-bottom:30px">
+      <h1 class="glow-title">Preguntas & Categorías</h1>
+      <p class="muted" style="margin-top:-8px; opacity:.9">Administrar el contenido del juego</p>
 
-  <h1 class="glow-title">Preguntas & Categorías</h1>
-  <p class="muted" style="margin-top:-8px; opacity:.9">Administrar el contenido del juego</p>
+      <!-- Selector de categoría -->
+      <section style="margin-top:10px">
+        <label for="categoriaSelect" style="display:block; margin-bottom:6px">Categoría</label>
+        <div style="display:flex; gap:10px; align-items:center">
+          <select
+            id="categoriaSelect"
+            style="flex:1; padding:10px; border-radius:10px; background:rgba(0,0,0,.25); color:#fff; border:1px solid rgba(255,255,255,.15)"
+          ></select>
+          <button id="btnEliminarCategoria" class="btn ghost" type="button">Eliminar categoría</button>
+        </div>
+      </section>
 
-  <!-- Selector de Categoría -->
-  <section style="margin-top:10px">
-    <label for="categoriaSelect" style="display:block; margin-bottom:6px">Categoría</label>
-    <div style="display:flex; gap:10px; align-items:center">
-      <select id="categoriaSelect" style="flex:1; padding:10px; border-radius:10px; background:rgba(0,0,0,.25); color:#fff; border:1px solid rgba(255,255,255,.15)"></select>
-      <button id="btnEliminarCategoria" class="btn ghost" type="button">Eliminar Categoría</button>
+      <!-- Listado de preguntas -->
+      <section style="margin-top:18px">
+        <h2 class="section-title">Preguntas de la categoría</h2>
+        <ul id="listaPreguntas" class="list"></ul>
+      </section>
+
+      <!-- Formulario agregar / editar pregunta -->
+      <section style="margin-top:18px">
+        <h2 class="section-title">Agregar / Editar pregunta</h2>
+        <form id="formPregunta" autocomplete="off">
+          <input
+            id="preguntaTexto"
+            placeholder="Texto de la pregunta"
+            style="width:100%; background:rgba(0,0,0,.25); color:#fff; border:1px solid rgba(255,255,255,.25); border-radius:12px; padding:10px; margin:6px 0"
+          />
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <input
+              id="opcion0"
+              placeholder="Opción 1"
+              style="background:rgba(0,0,0,.25); color:#fff; border:1px solid rgba(255,255,255,.25); border-radius:12px; padding:10px"
+            />
+            <input
+              id="opcion1"
+              placeholder="Opción 2"
+              style="background:rgba(0,0,0,.25); color:#fff; border:1px solid rgba(255,255,255,.25); border-radius:12px; padding:10px"
+            />
+            <input
+              id="opcion2"
+              placeholder="Opción 3"
+              style="background:rgba(0,0,0,.25); color:#fff; border:1px solid rgba(255,255,255,.25); border-radius:12px; padding:10px"
+            />
+            <input
+              id="opcion3"
+              placeholder="Opción 4"
+              style="background:rgba(0,0,0,.25); color:#fff; border:1px solid rgba(255,255,255,.25); border-radius:12px; padding:10px"
+            />
+          </div>
+          <div style="margin:10px 0">
+            <label for="respuestaCorrecta">Respuesta correcta</label>
+            <select
+              id="respuestaCorrecta"
+              style="display:block; width:100%; padding:10px; border-radius:10px; background:rgba(0,0,0,.25); color:#fff; border:1px solid rgba(255,255,255,.15)"
+            >
+              <option value="0">Opción 1</option>
+              <option value="1">Opción 2</option>
+              <option value="2">Opción 3</option>
+              <option value="3">Opción 4</option>
+            </select>
+          </div>
+          <div class="actions">
+            <button type="submit" class="btn">Guardar pregunta</button>
+            <button type="button" id="btnCancelarEdicion" class="btn ghost">Cancelar</button>
+          </div>
+        </form>
+      </section>
+
+      <hr style="margin:24px 0; border-color:rgba(255,255,255,.1)" />
+
+      <!-- Nueva categoría -->
+      <section style="margin-top:10px">
+        <h2 class="section-title">Agregar nueva categoría</h2>
+        <form id="formNuevaCategoria" autocomplete="off">
+          <input
+            id="nuevaCategoriaNombre"
+            placeholder="Nombre de la nueva categoría"
+            style="width:100%; background:rgba(0,0,0,.25); color:#fff; border:1px solid rgba(255,255,255,.25); border-radius:12px; padding:10px; margin:6px 0"
+          />
+          <div style="font-weight:600; margin-top:10px">Primera pregunta</div>
+          <input
+            id="nc_preguntaTexto"
+            placeholder="Texto de la pregunta"
+            style="width:100%; background:rgba(0,0,0,.25); color:#fff; border:1px solid rgba(255,255,255,.25); border-radius:12px; padding:10px; margin:6px 0"
+          />
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <input
+              id="nc_opcion0"
+              placeholder="Opción 1"
+              style="background:rgba(0,0,0,.25); color:#fff; border:1px solid rgba(255,255,255,.25); border-radius:12px; padding:10px"
+            />
+            <input
+              id="nc_opcion1"
+              placeholder="Opción 2"
+              style="background:rgba(0,0,0,.25); color:#fff; border:1px solid rgba(255,255,255,.25); border-radius:12px; padding:10px"
+            />
+            <input
+              id="nc_opcion2"
+              placeholder="Opción 3"
+              style="background:rgba(0,0,0,.25); color:#fff; border:1px solid rgba(255,255,255,.25); border-radius:12px; padding:10px"
+            />
+            <input
+              id="nc_opcion3"
+              placeholder="Opción 4"
+              style="background:rgba(0,0,0,.25); color:#fff; border:1px solid rgba(255,255,255,.25); border-radius:12px; padding:10px"
+            />
+          </div>
+          <div style="margin:10px 0">
+            <label for="nc_respuestaCorrecta">Respuesta correcta</label>
+            <select
+              id="nc_respuestaCorrecta"
+              style="display:block; width:100%; padding:10px; border-radius:10px; background:rgba(0,0,0,.25); color:#fff; border:1px solid rgba(255,255,255,.15)"
+            >
+              <option value="0">Opción 1</option>
+              <option value="1">Opción 2</option>
+              <option value="2">Opción 3</option>
+              <option value="3">Opción 4</option>
+            </select>
+          </div>
+          <div class="actions">
+            <button type="submit" class="btn">Crear categoría</button>
+          </div>
+        </form>
+      </section>
+
+      <a href="/static/index.html" class="btn-menu btn-volver">Volver al menú</a>
+
+      <div id="toast" class="toast"></div>
     </div>
-  </section>
 
-  <!-- Listado de preguntas -->
-  <section style="margin-top:18px">
-    <h2 class="section-title">Preguntas de la Categoría</h2>
-    <ul id="listaPreguntas" class="list"></ul>
-  </section>
-
-  <!-- Formulario agregar / editar pregunta -->
-  <section style="margin-top:18px">
-    <h2 class="section-title">Agregar / Editar pregunta</h2>
-    <form id="formPregunta">
-      <input id="preguntaTexto" placeholder="Texto de la pregunta" style="width:100%; background:rgba(0,0,0,.25); color:#fff; border:1px solid rgba(255,255,255,.25); border-radius:12px; padding:10px; margin:6px 0" />
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-        <input id="Opción0" placeholder="Opción 1" style="background:rgba(0,0,0,.25); color:#fff; border:1px solid rgba(255,255,255,.25); border-radius:12px; padding:10px" />
-        <input id="Opción1" placeholder="Opción 2" style="background:rgba(0,0,0,.25); color:#fff; border:1px solid rgba(255,255,255,.25); border-radius:12px; padding:10px" />
-        <input id="Opción2" placeholder="Opción 3" style="background:rgba(0,0,0,.25); color:#fff; border:1px solid rgba(255,255,255,.25); border-radius:12px; padding:10px" />
-        <input id="Opción3" placeholder="Opción 4" style="background:rgba(0,0,0,.25); color:#fff; border:1px solid rgba(255,255,255,.25); border-radius:12px; padding:10px" />
-      </div>
-      <div style="margin:10px 0">
-        <label for="respuestaCorrecta">Respuesta correcta</label>
-        <select id="respuestaCorrecta" style="display:block; width:100%; padding:10px; border-radius:10px; background:rgba(0,0,0,.25); color:#fff; border:1px solid rgba(255,255,255,.15)">
-          <option value="0">Opción 1</option>
-          <option value="1">Opción 2</option>
-          <option value="2">Opción 3</option>
-          <option value="3">Opción 4</option>
-        </select>
-      </div>
-      <div class="actions">
-        <button type="submit" class="btn">Guardar pregunta</button>
-        <button type="button" id="btnCancelarEdicion" class="btn ghost">Cancelar</button>
-      </div>
-    </form>
-  </section>
-
-  <hr style="margin:24px 0; border-color:rgba(255,255,255,.1)">
-
-  <!-- Nueva Categoría -->
-  <section style="margin-top:10px">
-    <h2 class="section-title">Agregar nueva Categoría</h2>
-    <form id="formNuevaCategoria">
-      <input id="nuevaCategoriaNombre" placeholder="Nombre de la nueva Categoría" style="width:100%; background:rgba(0,0,0,.25); color:#fff; border:1px solid rgba(255,255,255,.25); border-radius:12px; padding:10px; margin:6px 0" />
-      <div style="font-weight:600; margin-top:10px">Primera pregunta</div>
-      <input id="nc_preguntaTexto" placeholder="Texto de la pregunta" style="width:100%; background:rgba(0,0,0,.25); color:#fff; border:1px solid rgba(255,255,255,.25); border-radius:12px; padding:10px; margin:6px 0" />
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-        <input id="nc_Opción0" placeholder="Opción 1" style="background:rgba(0,0,0,.25); color:#fff; border:1px solid rgba(255,255,255,.25); border-radius:12px; padding:10px" />
-        <input id="nc_Opción1" placeholder="Opción 2" style="background:rgba(0,0,0,.25); color:#fff; border:1px solid rgba(255,255,255,.25); border-radius:12px; padding:10px" />
-        <input id="nc_Opción2" placeholder="Opción 3" style="background:rgba(0,0,0,.25); color:#fff; border:1px solid rgba(255,255,255,.25); border-radius:12px; padding:10px" />
-        <input id="nc_Opción3" placeholder="Opción 4" style="background:rgba(0,0,0,.25); color:#fff; border:1px solid rgba(255,255,255,.25); border-radius:12px; padding:10px" />
-      </div>
-      <div style="margin:10px 0">
-        <label for="nc_respuestaCorrecta">Respuesta correcta</label>
-        <select id="nc_respuestaCorrecta" style="display:block; width:100%; padding:10px; border-radius:10px; background:rgba(0,0,0,.25); color:#fff; border:1px solid rgba(255,255,255,.15)">
-          <option value="0">Opción 1</option>
-          <option value="1">Opción 2</option>
-          <option value="2">Opción 3</option>
-          <option value="3">Opción 4</option>
-        </select>
-      </div>
-      <div class="actions">
-        <button type="submit" class="btn">Crear Categoría</button>
-      </div>
-    </form>
-  </section>
-
-  <a href="/static/index.html" class="btn-menú btn-volver">Volver al menú</a>
-
-  <div id="toast" class="toast"></div>
-
-</div>
-
-<script src="/static/admin_questions_local.js"></script>
-</body>
+    <script src="/static/admin_questions_local.js"></script>
+  </body>
 </html>
-
-
 

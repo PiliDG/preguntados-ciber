@@ -307,3 +307,15 @@ body{height:auto; background-attachment: fixed, fixed}
 .pregunta-contenido{display:flex;justify-content:space-between;align-items:center;gap:1rem}
 .pregunta-texto{flex:1}
 .pregunta-acciones{display:flex;gap:.5rem;justify-content:flex-end}
+
+/* Fondo más oscuro para lista de preguntas en admin */
+#listaPreguntas{
+  background: linear-gradient(to bottom, #d77acb, #2b102f);
+  padding: 10px;
+  border-radius: 12px;
+}
+
+#listaPreguntas .player-item{
+  background-color: rgba(30, 10, 40, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
