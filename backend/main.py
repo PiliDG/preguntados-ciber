@@ -23,11 +23,6 @@ def index_root():
 # Juego en memoria (simple). Para mÃºltiples sesiones usarÃ­as un store.
 players: List[Player] = []
 GAME = Game(players)
-class AnswerIn(BaseModel):
-    player: str
-    question_id: str
-    option_index: int
-
 class QuestionIn(BaseModel):
     category: str
     text: str
@@ -59,15 +54,24 @@ def spin():
     q = GAME.next_question()
     return {"category": cat, "question": q}
 
+class AnswerStatsIn(BaseModel):
+    player_name: str
+    categoria: str
+    correcta: bool
+    tiempo_respuesta: Optional[float]  # en segundos; None si no respondió
+    tiempo_limite: float               # por ejemplo 15.0
+
+
 @app.post("/api/answer")
-def answer(payload: AnswerIn):
-    player = next((p for p in players if p.name == payload.player), None)
-    if not player:
-        player = Player(payload.player)
-        players.append(player)
-    result = GAME.answer(player, payload.question_id, payload.option_index)
-    next_q = GAME.next_question()
-    return {"result": result, "next": next_q}
+def registrar_respuesta(req: AnswerStatsIn):
+    GAME.register_answer(
+        player_name=req.player_name,
+        categoria=req.categoria,
+        correcta=req.correcta,
+        tiempo_respuesta=req.tiempo_respuesta,
+        tiempo_limite=req.tiempo_limite,
+    )
+    return {"ok": True}
 
 @app.get("/api/podium")
 def podium():

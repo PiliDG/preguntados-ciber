@@ -354,6 +354,7 @@ const state = {
   categoriasOrden: sectores.map((s) => s.nombre),
   sectores,
   rotacionBase: 0,
+  segundosRestantes: null,
 };
 
 async function cargarJugadores() {
@@ -489,6 +490,7 @@ function mostrarPregunta(categoria) {
   }
 
   let restante = 15;
+  state.segundosRestantes = restante;
   if (timer) timer.textContent = `Tiempo restante: ${restante}`;
 
   if (state.cuentaRegresivaId) {
@@ -498,6 +500,7 @@ function mostrarPregunta(categoria) {
 
   state.cuentaRegresivaId = setInterval(() => {
     restante -= 1;
+    state.segundosRestantes = restante;
     if (timer) timer.textContent = `Tiempo restante: ${restante}`;
     if (restante <= 0) {
       clearInterval(state.cuentaRegresivaId);
@@ -507,6 +510,30 @@ function mostrarPregunta(categoria) {
   }, 1000);
 
   return true;
+}
+
+async function registrarRespuestaEnServidor({
+  playerName,
+  categoria,
+  esCorrecta,
+  tiempoRespuesta,
+  tiempoLimite,
+}) {
+  try {
+    await fetch("/api/answer", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        player_name: playerName,
+        categoria,
+        correcta: esCorrecta,
+        tiempo_respuesta: tiempoRespuesta,
+        tiempo_limite: tiempoLimite,
+      }),
+    });
+  } catch (e) {
+    console.error("Error al registrar respuesta en el servidor", e);
+  }
 }
 
 function evaluarRespuesta(indice) {
@@ -523,6 +550,15 @@ function evaluarRespuesta(indice) {
   }
 
   const correcta = q.respuesta;
+  const jugadorActual = state.jugadores[state.indiceJugadorActual] || null;
+  const categoriaActual = state.categoriaActual || "";
+  const TIEMPO_LIMITE = 15;
+  let tiempoRespuesta = null;
+  if (indice !== -1 && state.segundosRestantes != null) {
+    tiempoRespuesta = TIEMPO_LIMITE - state.segundosRestantes;
+    if (tiempoRespuesta < 0) tiempoRespuesta = 0;
+  }
+
   if (indice === -1) {
     r.textContent = `Tiempo agotado. La respuesta correcta era: ${q.opciones[correcta]}`;
   } else if (indice === correcta) {
@@ -534,6 +570,17 @@ function evaluarRespuesta(indice) {
   if (state.timeoutResultadoId) {
     clearTimeout(state.timeoutResultadoId);
   }
+
+  if (jugadorActual) {
+    registrarRespuestaEnServidor({
+      playerName: jugadorActual,
+      categoria: categoriaActual,
+      esCorrecta: indice === correcta,
+      tiempoRespuesta: indice === -1 ? null : tiempoRespuesta,
+      tiempoLimite: TIEMPO_LIMITE,
+    });
+  }
+
   state.timeoutResultadoId = setTimeout(() => {
     pasarAlSiguienteTurno();
   }, 5000);

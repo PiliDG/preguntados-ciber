@@ -112,9 +112,39 @@ class Game:
     def get_players(self) -> List[Player]:
         return list(self.players)
 
+    def register_answer(
+        self,
+        player_name: str,
+        categoria: str,
+        correcta: bool,
+        tiempo_respuesta: Optional[float],
+        tiempo_limite: float,
+    ) -> None:
+        """Actualizar puntaje del jugador y estadísticas de la partida."""
+        player = next((p for p in self.players if p.name == player_name), None)
+        if player is None:
+            return
+
+        # Puntaje y aciertos/errores por jugador
+        if correcta:
+            player.add_points(PUNTOS_CORRECTA)
+            player.correct += 1
+        else:
+            player.lose_points(2)
+            player.wrong += 1
+            if categoria:
+                self.errors_by_category[categoria] += 1
+
+        # Clasificación de tiempos de respuesta
+        if tiempo_respuesta is None or tiempo_respuesta >= tiempo_limite:
+            self.response_stats["tarde"] += 1
+        elif tiempo_respuesta <= 5:
+            self.response_stats["agil"] += 1
+        else:
+            self.response_stats["promedio"] += 1
+
     def get_stats(self) -> Dict[str, Dict]:
         return {
             "errores_por_categoria": dict(self.errors_by_category),
             "tiempos_respuesta": dict(self.response_stats),
         }
-
