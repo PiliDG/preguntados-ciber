@@ -60,36 +60,3 @@ Abrí `http://localhost:8000` en el navegador.
 
 ## Licencia
 MIT
-
-
-## Etapas y motivos
-- Probar localmente — Asegurar que funcione y no haya errores
-- Configurar FastAPI + frontend — Para que Railway sirva todo desde un mismo proyecto
-- Subir a GitHub — Fuente oficial del proyecto
-- Conectar a Railway — Publicarlo online automáticamente. Probamos todo local primero para evitar debug en producción
-
-
-## Checklist antes de subir
-- [x] El servidor arranca correctamente (Uvicorn sin errores)
-- [x] El HTML, CSS y JS se cargan desde `/` y `/static/*`
-- [x] No hay rutas rotas (`/api/...` responde 2xx/4xx esperado)
-- [x] FastAPI responde bien (por ejemplo `/api/categories`, `/api/spin`, `/api/podium`)
-
-
-## Pruebas rápidas (local)
-- Iniciar: `uvicorn backend.main:app --reload`
-- Navegador: `http://localhost:8000` (debe cargar la UI)
-- Categorías: `curl http://localhost:8000/api/categories`
-- Spin: `curl -X POST http://localhost:8000/api/spin`
-- Responder (ejemplo): `curl -X POST http://localhost:8000/api/answer -H "Content-Type: application/json" -d "{\"player\":\"Dev\",\"question_id\":\"Q0001\",\"option_index\":0}"`
-- Podio: `curl http://localhost:8000/api/podium`
-
-PowerShell (alternativa):
-- `Invoke-WebRequest http://localhost:8000/api/categories | Select-Object -Expand Content`
-
-
-## Notas para Railway
-- Este repo ya trae `Procfile` y `railway.toml` con el comando de arranque.
-- El filesystem del servicio es efímero: si usas el CRUD admin en producción, los cambios en `data/db.json` pueden perderse al redeploy. Soluciones:
-  - Adjuntar un Volume en Railway y apuntar `DB_PATH` a esa ruta (por ej. `/data/db.json`).
-  - O mantener las preguntas en `data/questions.json` y no usar CRUD en prod.
