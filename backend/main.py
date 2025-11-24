@@ -71,7 +71,17 @@ def answer(payload: AnswerIn):
 
 @app.get("/api/podium")
 def podium():
-    return GAME.podium()
+    jugadores = GAME.get_players()
+    data_jugadores = [
+        {"nombre": p.name, "puntos": p.score}
+        for p in jugadores
+    ]
+    data_jugadores.sort(key=lambda j: j["puntos"], reverse=True)
+
+    return {
+        "jugadores": data_jugadores,
+        "estadisticas": GAME.get_stats(),
+    }
 
 # CRUD ADMIN (Question)
 @app.get("/api/admin/questions")

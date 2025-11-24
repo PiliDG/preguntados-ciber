@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Debuggeadas” Podio</title>
+    <title>Debuggeadas - Podio</title>
     <link rel="stylesheet" href="/static/styles.css" />
     <style>
       .podio-wrap{max-width:980px;width:95%;padding-bottom:30px}
@@ -39,11 +39,24 @@
         <div id="podio" class="podio-grid"></div>
 
         <section class="stats">
-          <h3>Estadí­sticas de la partida</h3>
+          <h3>Estadísticas de la partida</h3>
           <div class="stats-grid">
-            <div class="stats-card" id="stat-errores"></div>
-            <div class="stats-card" id="stat-dificiles"></div>
-            <div class="stats-card" id="stat-tiempo"></div>
+            <div class="stats-card" id="stats-errores">
+              <h3>Errores por categoría</h3>
+              <ul id="lista-errores"></ul>
+            </div>
+            <div class="stats-card" id="stats-tiempos">
+              <h3>Tiempo de respuesta</h3>
+              <ul id="lista-tiempos"></ul>
+            </div>
+            <div class="stats-card" id="stats-campeones">
+              <h3>Campeones: mejores puntajes</h3>
+              <ul>
+                <li>Delfina: 150 puntos</li>
+                <li>Pilar: 90 puntos</li>
+                <li>Guille: 70 puntos</li>
+              </ul>
+            </div>
           </div>
         </section>
       </section>
@@ -53,6 +66,5 @@
 
     <script src="/static/podium.js"></script>
   </body>
-  </html>
-
+</html>
 
