@@ -398,7 +398,7 @@ function tirarRuleta() {
   const seg = 360 / categorias.length;
   const centro = indice * seg + seg / 2; // ángulo central del sector
   state.rotacionBase += 360 * 3; // vueltas completas para animación
-  const destino = state.rotacionBase + (270 - centro); // 270deg = parte superior
+  const destino = state.rotacionBase + (90 - centro); // 270deg = parte superior
 
   ruleta.style.transition = "transform 1.8s cubic-bezier(.15,.85,.25,1)";
   ruleta.style.transform = `rotate(${destino}deg)`;
@@ -433,6 +433,7 @@ function tirarRuleta() {
       if (pantallaRuleta && pantallaPregunta) {
         pantallaRuleta.classList.add("hidden");
         pantallaPregunta.classList.remove("hidden");
+        pantallaPregunta.scrollIntoView({ behavior: "smooth", block: "start" });
       }
     }, 3000);
   }, 1800);
@@ -624,4 +625,3 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 });
-
