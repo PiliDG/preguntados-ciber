@@ -589,15 +589,4 @@ document.addEventListener("DOMContentLoaded", () => {
   if (btnCancelar) {
     btnCancelar.addEventListener("click", limpiarFormularioPregunta);
   }
-
-  const formNueva = $("#formNuevaCategoria");
-  if (formNueva) {
-    formNueva.addEventListener("submit", crearNuevaCategoria);
-  }
-
-  const btnEliminarCat = $("#btnEliminarCategoria");
-  if (btnEliminarCat) {
-    btnEliminarCat.addEventListener("click", eliminarCategoriaActual);
-  }
 });
-
