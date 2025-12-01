@@ -1,4 +1,4 @@
-"use strict";
+﻿"use strict";
 
 // Banco de preguntas en memoria (se puede editar desde la UI)
 const bancoPreguntas = {
@@ -324,9 +324,42 @@ const bancoPreguntas = {
   ],
 };
 
+const STORAGE_KEY_PREGUNTAS = "bancoPreguntasDebuggeadas";
+
 let categoriaSeleccionada = null;
 let preguntaEditandoIndex = null;
 let preguntaPendienteEliminarIndex = null;
+
+function cargarBancoDesdeStorage() {
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY_PREGUNTAS);
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    if (!data || typeof data !== "object") return;
+
+    // Reemplazar categorías por la versión persistida
+    Object.keys(bancoPreguntas).forEach((cat) => {
+      if (!(cat in data)) {
+        delete bancoPreguntas[cat];
+      }
+    });
+    Object.keys(data).forEach((cat) => {
+      if (Array.isArray(data[cat])) {
+        bancoPreguntas[cat] = data[cat];
+      }
+    });
+  } catch (e) {
+    console.error("Error leyendo bancoPreguntas de storage", e);
+  }
+}
+
+function guardarBancoEnStorage() {
+  try {
+    window.localStorage.setItem(STORAGE_KEY_PREGUNTAS, JSON.stringify(bancoPreguntas));
+  } catch (e) {
+    console.error("Error guardando bancoPreguntas en storage", e);
+  }
+}
 
 function $(sel) {
   return document.querySelector(sel);
@@ -467,6 +500,7 @@ function guardarPreguntaDesdeFormulario(ev) {
     showToast("Pregunta actualizada");
   }
 
+  guardarBancoEnStorage();
   limpiarFormularioPregunta();
   renderPreguntas();
 }
@@ -522,8 +556,6 @@ function eliminarPregunta(index) {
   const arr = bancoPreguntas[categoriaSeleccionada];
   if (!arr) return;
 
-
-
   if (index < 0 || index >= arr.length) return;
 
   arr.splice(index, 1);
@@ -538,6 +570,7 @@ function eliminarPregunta(index) {
 
   renderPreguntas();
   showToast("Pregunta eliminada");
+  guardarBancoEnStorage();
 }
 
 function eliminarCategoriaActual() {
@@ -569,6 +602,7 @@ function eliminarCategoriaActual() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  cargarBancoDesdeStorage();
   const btnCancelModal = document.getElementById("btnCancelEliminarPregunta");
   if (btnCancelModal) {
     btnCancelModal.addEventListener("click", () => {

@@ -1,7 +1,7 @@
 "use strict";
 
 // Banco de preguntas local (mismo formato que admin)
-const bancoPreguntas = {
+const bancoPreguntasDefault = {
   "Colecciones y datos": [
     {
       texto: "¿Cuál de estas estructuras es inmutable en Python?",
@@ -334,6 +334,22 @@ const bancoPreguntas = {
   ],
 };
 
+const STORAGE_KEY_PREGUNTAS = "bancoPreguntasDebuggeadas";
+let bancoPreguntas = bancoPreguntasDefault;
+
+function cargarBancoPreguntasDesdeStorage() {
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY_PREGUNTAS);
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    if (!data || typeof data !== "object") return;
+    bancoPreguntas = data;
+  } catch (e) {
+    console.error("Error leyendo bancoPreguntas para juego", e);
+    bancoPreguntas = bancoPreguntasDefault;
+  }
+}
+
 // Sectores de la ruleta: nombre + color
 const sectores = [
   { nombre: "Colecciones y datos", color: "#ffc3df" }, // rosa
@@ -626,6 +642,7 @@ function salirAlMenu() {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
+  cargarBancoPreguntasDesdeStorage();
   // preparar colores y lista de categorías
   state.categoriasOrden = Object.keys(bancoPreguntas);
 
