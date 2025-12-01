@@ -118,7 +118,7 @@ function renderizarEstadisticas(estadisticas) {
         valor: tiempos.promedio || 0,
       },
       {
-        label: "Tarde (no respondió / tiempo agotado)",
+        label: "Tarde (tiempo agotado)",
         valor: tiempos.tarde || 0,
       },
     ];

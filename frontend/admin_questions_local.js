@@ -326,6 +326,7 @@ const bancoPreguntas = {
 
 let categoriaSeleccionada = null;
 let preguntaEditandoIndex = null;
+let preguntaPendienteEliminarIndex = null;
 
 function $(sel) {
   return document.querySelector(sel);
@@ -389,7 +390,7 @@ function renderPreguntas() {
     btnEliminar.className = "btn ghost";
 
     btnEditar.addEventListener("click", () => cargarPreguntaEnFormulario(index));
-    btnEliminar.addEventListener("click", () => eliminarPregunta(index));
+    btnEliminar.addEventListener("click", () => abrirModalEliminarPregunta(index));
 
     acciones.append(btnEditar, btnEliminar);
     wrap.append(txt, acciones);
@@ -470,7 +471,7 @@ function guardarPreguntaDesdeFormulario(ev) {
   renderPreguntas();
 }
 
-function crearNuevaCategoria(ev) {
+function crearNuevaCategoria_OLD(ev) {
   ev.preventDefault();
 
   const nombreEl = $("#nuevaCategoriaNombre");
@@ -521,7 +522,7 @@ function eliminarPregunta(index) {
   const arr = bancoPreguntas[categoriaSeleccionada];
   if (!arr) return;
 
-  if (!confirm("¿Seguro que querés eliminar esta pregunta?")) return;
+
 
   if (index < 0 || index >= arr.length) return;
 
@@ -568,6 +569,23 @@ function eliminarCategoriaActual() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  const btnCancelModal = document.getElementById("btnCancelEliminarPregunta");
+  if (btnCancelModal) {
+    btnCancelModal.addEventListener("click", () => {
+      cerrarModalEliminarPregunta();
+    });
+  }
+
+  const btnConfirmModal = document.getElementById("btnConfirmEliminarPregunta");
+  if (btnConfirmModal) {
+    btnConfirmModal.addEventListener("click", () => {
+      if (preguntaPendienteEliminarIndex !== null) {
+        eliminarPregunta(preguntaPendienteEliminarIndex);
+      }
+      cerrarModalEliminarPregunta();
+    });
+  }
+
   cargarCategorias();
   renderPreguntas();
 
@@ -590,3 +608,19 @@ document.addEventListener("DOMContentLoaded", () => {
     btnCancelar.addEventListener("click", limpiarFormularioPregunta);
   }
 });
+
+function abrirModalEliminarPregunta(index) {
+  preguntaPendienteEliminarIndex = index;
+  const dialog = document.getElementById("modalEliminarPregunta");
+  if (dialog && typeof dialog.showModal === "function") {
+    dialog.showModal();
+  }
+}
+
+function cerrarModalEliminarPregunta() {
+  const dialog = document.getElementById("modalEliminarPregunta");
+  if (dialog) {
+    dialog.close();
+  }
+  preguntaPendienteEliminarIndex = null;
+}
